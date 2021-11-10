@@ -1,0 +1,13 @@
+<ng-template boardContent></ng-template>
+<div 
+    cdkDrag
+    cdkDragBoundary="#board"
+    (cdkDragStarted)="dragPiece($event)"
+    (cdkDragEnded)="dropPiece($event)"
+
+    (click)="select()"
+
+    class="piece" 
+    [ngClass]="[(isDragging ? 'dragging' : ''), ((isSelected && ! isDragging) ? 'selected' : '')]" 
+    [ngStyle]="{ 'transform': 'translate(' + dx +  '%,' + dy + '%)', 'background-image': 'url(../../assets/piece/' + type.toLowerCase() + color + '.svg)' }"
+    ></div>

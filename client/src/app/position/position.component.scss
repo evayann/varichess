@@ -1,0 +1,26 @@
+:host {
+    position: absolute;
+    width: 12.5%;
+    aspect-ratio: 1;
+}
+
+.position {
+    display: flex;
+    width: 100%;
+    aspect-ratio: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.square {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: green;
+}
+
+.circle {
+    width: 35%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: red;
+}

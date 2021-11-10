@@ -1,0 +1,26 @@
+:host {
+    position: relative;
+    height: 100vh;
+}
+
+#container {
+    position: relative;
+    height: 100%;
+}
+
+app-game {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button#menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+}

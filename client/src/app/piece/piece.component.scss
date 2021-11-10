@@ -1,0 +1,22 @@
+:host {
+    position: absolute;
+    width: 12.5%;
+    aspect-ratio: 1;
+}
+
+.piece {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background-size: cover;
+    z-index: 100;
+    cursor: pointer;
+}
+
+.dragging {
+    cursor: grabbing !important; // Override default cursor during dragging
+}
+
+.selected {
+    cursor: grab !important; // Override defaut cursor
+}
