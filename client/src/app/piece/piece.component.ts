@@ -20,6 +20,8 @@ export class PieceComponent {
   isSelected: boolean = false;
   isDragging: boolean = false;
 
+  isMovable: boolean = false;
+
   constructor() { }
 
   move(x: number, y: number) {
@@ -30,6 +32,8 @@ export class PieceComponent {
   }
 
   dragPiece(event: CdkDragStart) {
+    if (! this.isMovable) return;
+
     // If previous move isn't drag, we need to set new initialTransform 
     event.source._dragRef["_initialTransform"] = "translate(" + this.dx + "%, " + this.dy + "%)";
     this.board.selectPiece(this);
@@ -44,7 +48,12 @@ export class PieceComponent {
     this.isDragging = false;
   }
 
-  select() {
+  select(event: Event) {
+    if (! this.isMovable) return;
+    
+    // Stop propagation to don't trigger parent element when click on a piece on board
+    event.stopImmediatePropagation();
+    
     // Unselect other piece if exist
     this.board.unselectPiece();
 

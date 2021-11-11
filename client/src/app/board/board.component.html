@@ -1,3 +1,6 @@
-<div id="board" #board>
-    <ng-template boardContent></ng-template>
+<div id="board" #board
+    (click)="clickOnBoard()" >
+    <ng-container #blackPiece></ng-container>
+    <ng-container #whitePiece></ng-container>
+    <ng-container #boardContent></ng-container>
 </div>

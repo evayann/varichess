@@ -18,9 +18,30 @@
     background-color: green;
 }
 
+.corner {
+    width: 100%;
+    aspect-ratio: 1;
+    background: radial-gradient(transparent 0%, transparent 50%, green 51%);
+}
+
 .circle {
     width: 35%;
     aspect-ratio: 1;
     border-radius: 50%;
     background-color: red;
+}
+
+.position::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: transparent;
+}
+
+.position:hover::after {
+    background-color: blue;
+    opacity: .7;
 }

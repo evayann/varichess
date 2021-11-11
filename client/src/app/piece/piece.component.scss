@@ -5,12 +5,13 @@
 }
 
 .piece {
-    position: relative;
+    position: absolute;
     width: 100%;
     aspect-ratio: 1;
     background-size: cover;
     z-index: 100;
     cursor: pointer;
+    // will-change: transform;
 }
 
 .dragging {

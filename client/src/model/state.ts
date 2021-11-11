@@ -1,4 +1,4 @@
-import { Piece } from "./piece";
+import { Piece, isWhite } from "./piece";
 import { Position } from "./position";
 import { Direction } from "./directions";
 
@@ -11,9 +11,20 @@ export class State {
         this.parseFen(fen);
     }
 
-    move(xFrom: number, yFrom: number, xTo: number, yTo: number): void {
+    /**
+     * Move a piece from x,y to x, y and return a boolean 
+     * to indicate if a piece was eat  during movement
+     * @param xFrom the x pos from
+     * @param yFrom the y pos from
+     * @param xTo the x pos to
+     * @param yTo the y pos to
+     * @returns indication of if a piece was eat
+     */
+    move(xFrom: number, yFrom: number, xTo: number, yTo: number): boolean {       
+        const eat = this.board[yTo][xTo] !== State.EMPTY;
         this.board[yTo][xTo] = this.board[yFrom][xFrom];
         this.board[yFrom][xFrom] = State.EMPTY;
+        return eat;
     }
 
     convertBoardToPosition(): Position[] {
@@ -36,6 +47,25 @@ export class State {
                         break;
 
                     acc.push({ x: x, y: y, type: "MOVEMENT" });
+                }
+
+            }
+            return acc;
+        }, [] as Position[]);
+    }
+
+    getEatFor(type:string, currX: number, currY: number, length: number, dirs: Direction[]): Position[] {
+        return dirs.reduce((acc, dir) => {
+            for (let i = 1; i <= length; i++) {
+                let x: number = currX + i * dir.x;
+                let y: number = currY + i * dir.y;
+                
+                if (0 <= x && x < 8 && 0 <= y && y < 8) {
+                    if (this.board[y][x] !== State.EMPTY) {
+                        if (isWhite(this.board[y][x]) !== isWhite(Piece[type as keyof typeof Piece]))
+                            acc.push({ x: x, y: y, type: "EAT" });
+                        break;
+                    }
                 }
 
             }

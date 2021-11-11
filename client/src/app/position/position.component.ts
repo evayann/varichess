@@ -26,5 +26,4 @@ export class PositionComponent {
   goTo() {
     this.board.tryMoveSelectedTo(this.x / 100, this.y / 100);
   }
-
 }

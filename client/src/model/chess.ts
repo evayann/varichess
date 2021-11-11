@@ -16,21 +16,26 @@ export class Chess {
         this.currentPlayer = Player.WHITE;
     }
 
-    moveToIfLegal(type: string, px: number, py: number, tx: number, ty: number): boolean {
-        console.log(type, px, py);
-        
-        const legal = this.getPlayFor(type, px, py).some(pos => {
-            console.log(tx, ty, pos);
-            
-            return pos.x === tx && pos.y === ty
-        });
+    /**
+     * Apply movement if legal and return a boolean 
+     * to indicate it and one to indicate 
+     * if a piece was eat during movement
+     * @param type the piece
+     * @param px previous x position
+     * @param py previous y position
+     * @param tx next x position
+     * @param ty next y position
+     * @returns 
+     */
+    moveToIfLegal(type: string, px: number, py: number, tx: number, ty: number): [boolean, boolean] {
+        const legalMove: boolean = 
+            this.getPlayFor(type, px, py)
+                .concat(this.getEatFor(type, px, py))
+                .some(pos => pos.x === tx && pos.y === ty);
 
-        console.log(legal);
-        
-        if (legal)
-            this.state.move(px, py, tx, ty);
-
-        return legal;
+        if (legalMove)
+            return [true, this.state.move(px, py, tx, ty)];
+        return [false, false];
     }
 
     saveState(): void {
@@ -44,4 +49,13 @@ export class Chess {
     getPlayFor(type: string, x: number, y: number): Position[] {
         return this.state.getMoveFor(x, y, ...this.rules.getPlayFor(type));
     }
+
+    getEatFor(type: string, x: number, y: number): Position[] {
+        return this.state.getEatFor(type, x, y, ...this.rules.getEatFor(type));
+    }
+
+    getStarter(): number {
+        return this.currentPlayer;
+    }
+
 }
