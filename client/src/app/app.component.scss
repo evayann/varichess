@@ -12,6 +12,8 @@ app-game {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    height: 100%;
 }
 
 button#menu {
@@ -21,6 +23,11 @@ button#menu {
 }
 
 .nav {
+    height: 100%;
     display: flex;
     flex-direction: column;
+}
+
+.nav > div#space {
+    flex-grow: 2;
 }

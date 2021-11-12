@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
+import { CdkDragEnd, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
 import { BoardComponent } from 'app/board/board.component';
 
 @Component({
@@ -32,11 +32,8 @@ export class PieceComponent {
   }
 
   dragPiece(event: CdkDragStart) {
-    if (! this.isMovable) return;
-
     // If previous move isn't drag, we need to set new initialTransform 
     event.source._dragRef["_initialTransform"] = "translate(" + this.dx + "%, " + this.dy + "%)";
-    this.board.selectPiece(this);
     this.isDragging = true;
   }
 
@@ -49,13 +46,8 @@ export class PieceComponent {
   }
 
   select(event: Event) {
-    if (! this.isMovable) return;
-    
     // Stop propagation to don't trigger parent element when click on a piece on board
-    event.stopImmediatePropagation();
-    
-    // Unselect other piece if exist
-    this.board.unselectPiece();
+    event.stopPropagation();
 
     // And select this one 
     this.isSelected = true;

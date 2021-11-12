@@ -1,6 +1,7 @@
 <div id="board" #board
-    (click)="clickOnBoard()" >
+    (mousedown)="clickOnBoard()" >
     <ng-container #blackPiece></ng-container>
     <ng-container #whitePiece></ng-container>
     <ng-container #boardContent></ng-container>
 </div>
+<p> C'est au tour du joueur {{ c.getCurrentPlayer() ? "noir" : "blanc"}} de joueur ! </p>

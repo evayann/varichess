@@ -12,29 +12,37 @@ export abstract class Rules {
     private keyFct: Map<string, Action> = new Map();
 
     constructor() {
-        const moves: Array<[string[], Action]> = [
-            [["k", "K"], this.mvtOfKing],
-            [["q", "Q"], this.mvtOfQueen],
-            [["r", "R"], this.mvtOfRook],
-            [["n", "N"], this.mvtOfKnight],
-            [["b", "B"], this.mvtOfBishop],
-            [["p", "P"], this.mvtOfPawn]
+        const moves: Array<[string, Action]> = [
+            ["k", this.mvtOfBlackKing],
+            ["q", this.mvtOfBlackQueen],
+            ["r", this.mvtOfBlackRook],
+            ["n", this.mvtOfBlackKnight],
+            ["b", this.mvtOfBlackBishop],
+            ["p", this.mvtOfBlackPawn],
+            ["K", this.mvtOfWhiteKing],
+            ["Q", this.mvtOfWhiteQueen],
+            ["R", this.mvtOfWhiteRook],
+            ["N", this.mvtOfWhiteKnight],
+            ["B", this.mvtOfWhiteBishop],
+            ["P", this.mvtOfWhitePawn],
          ];
-        moves.forEach(([pieces, action]) => {
-            pieces.forEach(piece => this.keyFct.set(Rules.MOVE + piece, action));
-        })
+        moves.forEach(([piece, action]) => this.keyFct.set(Rules.MOVE + piece, action));
 
-        const eats: Array<[string[], Action]> = [
-            [["k", "K"], this.eatOfKing],
-            [["q", "Q"], this.eatOfQueen],
-            [["r", "R"], this.eatOfRook],
-            [["n", "N"], this.eatOfKnight],
-            [["b", "B"], this.eatOfBishop],
-            [["p", "P"], this.eatOfPawn]
+        const eats: Array<[string, Action]> = [
+            ["k", this.eatOfBlackKing],
+            ["q", this.eatOfBlackQueen],
+            ["r", this.eatOfBlackRook],
+            ["n", this.eatOfBlackKnight],
+            ["b", this.eatOfBlackBishop],
+            ["p", this.eatOfBlackPawn],
+            ["K", this.eatOfWhiteKing],
+            ["Q", this.eatOfWhiteQueen],
+            ["R", this.eatOfWhiteRook],
+            ["N", this.eatOfWhiteKnight],
+            ["B", this.eatOfWhiteBishop],
+            ["P", this.eatOfWhitePawn]
          ];
-         eats.forEach(([pieces, action]) => {
-            pieces.forEach(piece => this.keyFct.set(Rules.EAT + piece, action));
-        })
+         eats.forEach(([piece, action]) => this.keyFct.set(Rules.EAT + piece, action));
     }
 
     abstract defaultBoardFen(): string;
@@ -43,31 +51,49 @@ export abstract class Rules {
         return this.keyFct.get(action + type);
     }
 
-    // Movements
+    //#region Movements
     getPlayFor(type: string): [number, Direction[]] {
         return this.getActionFor(Rules.MOVE, type)?.call(this) ?? [];
     }
 
-    abstract mvtOfKing(): [number, Direction[]];
-    abstract mvtOfQueen(): [number, Direction[]];
-    abstract mvtOfRook(): [number, Direction[]];
-    abstract mvtOfBishop(): [number, Direction[]];
-    abstract mvtOfKnight(): [number, Direction[]];
-    abstract mvtOfPawn(): [number, Direction[]];
+    abstract mvtOfWhiteKing(): [number, Direction[]];
+    abstract mvtOfWhiteQueen(): [number, Direction[]];
+    abstract mvtOfWhiteRook(): [number, Direction[]];
+    abstract mvtOfWhiteBishop(): [number, Direction[]];
+    abstract mvtOfWhiteKnight(): [number, Direction[]];
+    abstract mvtOfWhitePawn(): [number, Direction[]];
 
-    // Eat
+    abstract mvtOfBlackKing(): [number, Direction[]];
+    abstract mvtOfBlackQueen(): [number, Direction[]];
+    abstract mvtOfBlackRook(): [number, Direction[]];
+    abstract mvtOfBlackBishop(): [number, Direction[]];
+    abstract mvtOfBlackKnight(): [number, Direction[]];
+    abstract mvtOfBlackPawn(): [number, Direction[]];
+    //#endregion Movements
+
+    //#region Eat
     getEatFor(type: string): [number, Direction[]] {
         return this.getActionFor(Rules.EAT, type)?.call(this) ?? [];
     }
 
-    abstract eatOfKing(): [number, Direction[]];
-    abstract eatOfQueen(): [number, Direction[]];
-    abstract eatOfRook(): [number, Direction[]];
-    abstract eatOfBishop(): [number, Direction[]];
-    abstract eatOfKnight(): [number, Direction[]];
-    abstract eatOfPawn(): [number, Direction[]];
+    abstract eatOfWhiteKing(): [number, Direction[]];
+    abstract eatOfWhiteQueen(): [number, Direction[]];
+    abstract eatOfWhiteRook(): [number, Direction[]];
+    abstract eatOfWhiteBishop(): [number, Direction[]];
+    abstract eatOfWhiteKnight(): [number, Direction[]];
+    abstract eatOfWhitePawn(): [number, Direction[]];
 
-    // // On Check
+    abstract eatOfBlackKing(): [number, Direction[]];
+    abstract eatOfBlackQueen(): [number, Direction[]];
+    abstract eatOfBlackRook(): [number, Direction[]];
+    abstract eatOfBlackBishop(): [number, Direction[]];
+    abstract eatOfBlackKnight(): [number, Direction[]];
+    abstract eatOfBlackPawn(): [number, Direction[]];
+    //#endregion Eat
+
+    abstract kingCanBeCheck(): boolean;
+
+    // On Check
 
     // // On Movements
     // onKMvt(): Action,

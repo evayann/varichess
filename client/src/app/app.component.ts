@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
+import { BoardComponent } from "./board/board.component";
 
 @Component({
   selector: "app-root",
@@ -8,4 +9,11 @@ import { Component } from "@angular/core";
 
 export class AppComponent {
 
+  @ViewChild('board') board!: BoardComponent; 
+
+  constructor() {}
+
+  selectVariant(type: string) {
+    this.board.selectVariant(type);
+  }
 }

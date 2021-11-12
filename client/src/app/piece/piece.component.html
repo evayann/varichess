@@ -5,14 +5,15 @@
     (cdkDragEnded)="dropPiece($event)"
     [cdkDragDisabled]="!isMovable"
 
-    (click)="select($event)"
+    (mousedown)="select($event)"
 
     class="piece" 
     [ngClass]="[(isDragging ? 'dragging' : ''), ((isSelected && ! isDragging) ? 'selected' : '')]" 
     [ngStyle]="{ 
         'transform': 'translate(' + dx +  '%,' + dy + '%)', 
         'background-image': 'url(../../assets/piece/' + type.toLowerCase() + color + '.svg)',
-        'pointer-events': isMovable ? 'auto' : 'none'
+        'pointer-events': isMovable ? 'auto' : 'none',
+        'z-index': isMovable ? '100' : '50'
     }"
     >
 </div>

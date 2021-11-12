@@ -9,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from "./app.component";
 import { BoardComponent } from './board/board.component';
 import { PieceComponent } from './piece/piece.component';
-import { BoardDirective } from './board.directive';
 import { PositionComponent } from './position/position.component';
 
 @NgModule({
@@ -17,7 +16,6 @@ import { PositionComponent } from './position/position.component';
     AppComponent,
     BoardComponent,
     PieceComponent,
-    BoardDirective,
     PositionComponent
   ],
   imports: [

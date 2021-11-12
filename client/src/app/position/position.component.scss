@@ -1,34 +1,19 @@
-:host {
+.position {
     position: absolute;
     width: 12.5%;
     aspect-ratio: 1;
 }
 
-.position {
-    display: flex;
-    width: 100%;
-    aspect-ratio: 1;
-    align-items: center;
-    justify-content: center;
-}
-
 .square {
-    width: 100%;
-    aspect-ratio: 1;
     background-color: green;
 }
 
 .corner {
-    width: 100%;
-    aspect-ratio: 1;
-    background: radial-gradient(transparent 0%, transparent 50%, green 51%);
+    background: radial-gradient(transparent 0%, transparent 71%, green 72%);
 }
 
 .circle {
-    width: 35%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background-color: red;
+    background: radial-gradient( red 25%, transparent 26%);
 }
 
 .position::after {
@@ -42,6 +27,5 @@
 }
 
 .position:hover::after {
-    background-color: blue;
-    opacity: .7;
+    background-color: green;
 }

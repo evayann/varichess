@@ -4,6 +4,9 @@ import { PieceComponent } from 'app/piece/piece.component';
 import { PositionComponent } from 'app/position/position.component';
 
 import { Chess } from "model/chess";
+import { ChessRules } from 'model/rules/chessRules';
+import { RaceRules } from 'model/rules/raceRules';
+import { Rules } from 'model/rules/rules';
 
 export interface Point {
   x: number;
@@ -33,37 +36,76 @@ export class BoardComponent implements AfterViewInit {
   private static WHITE = 0;
   private static BLACK = 1;
 
-  private c = new Chess();
+  c: Chess;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver,
-    private cd: ChangeDetectorRef) {}
+  constructor(
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private cd: ChangeDetectorRef) {
+      this.c = new Chess(new ChessRules());
+    }
 
   ngAfterViewInit() {
     this.pieceFactory = this.componentFactoryResolver.resolveComponentFactory(PieceComponent);
     this.positionFactory = this.componentFactoryResolver.resolveComponentFactory(PositionComponent);
 
-    this.c.getInitialePosition().forEach(piece => this.createPiece(piece.type, piece.x, piece.y));
-    this.piecesComponent[this.c.getStarter()].forEach(piece => piece.isMovable = true);
+    this.initChess();
 
     // Indicate to angular we have a changement on the view because we create new piece
     this.cd.detectChanges();
   }
 
+  selectVariant(type: string) {
+    let rules: Rules = new ChessRules();
+    switch (type) {
+      case "explode":
+        rules = new ChessRules();
+        break;
+      case "race": 
+        rules = new RaceRules();
+        break;
+    }
+    this.c = new Chess(rules);
+    this.initChess();
+  }
+
+  //#region Board
   clickOnBoard() {    
     if (this.selectedPiece)
       this.unselectPiece();
   }  
 
-  private createPlace(type: string, x: number, y: number) {  
-    const ref = this.boardContent.createComponent(this.positionFactory);
-    ref.instance.init(type, x, y, this);
-    this.selectedPlaces.push({x: x / 100, y: y / 100});
+  private initChess() {
+    // Clean board before add new 
+    this.cleanChess();
+
+    this.c.getInitialePosition().forEach(piece => this.createPiece(piece.type, piece.x, piece.y));
+    this.selectPlayer(this.c.getCurrentPlayer());
   }
 
+  private cleanChess() {
+    this.piecesComponent.forEach((pieces, i) => {
+      const container: ViewContainerRef = i ? this.bPiece : this.wPiece;
+      pieces.forEach(() => container.remove());
+    });
+
+    this.piecesComponent = [[], []];
+
+    this.selectedPlaces.forEach(() => this.boardContent.remove());
+  }
+  //#endregion Board
+
+  //#region Select
   selectPiece(piece: PieceComponent) {
-    // If piece already selected, not reselect it
-    if (this.selectedPiece === piece) return;
+    // If piece already selected, not reselect it but unselect it
+    if (this.selectedPiece === piece) {
+      this.unselectPiece();
+      return;
+    }
     
+    // If other piece select, unselect before select this one
+    if (this.selectedPiece !== undefined)
+      this.unselectPiece();
+
     this.selectedPiece = piece;
     const [px, py] = piece.getPosition();
     this.createPlace("square", px, py);
@@ -77,13 +119,20 @@ export class BoardComponent implements AfterViewInit {
       this.createPlace("corner", play.x * 100, play.y * 100);
   }
 
-  unselectPiece() {   
-    this.selectedPiece?.unselect();
+  unselectPiece() {  
     this.selectedPiece = undefined;
     for (let i = this.selectedPlaces.length; i--;) 
       this.boardContent.remove();
     this.selectedPlaces = [];
 
+  }
+  //#endregion Select
+
+  //#region Piece
+  private createPlace(type: string, x: number, y: number) {  
+    const ref = this.boardContent.createComponent(this.positionFactory);
+    ref.instance.init(type, x, y, this);
+    this.selectedPlaces.push({x: x / 100, y: y / 100});
   }
 
   createPiece(type: string, px: number, py: number) {
@@ -101,9 +150,10 @@ export class BoardComponent implements AfterViewInit {
     return instance;
   }
 
-  removePiece(x: number, y: number) {    
-    const color: number = this.selectedPiece?.type ? BoardComponent.BLACK : BoardComponent.WHITE;
+  removePiece(x: number, y: number) { 
+    const color: number = this.c.getCurrentPlayer() ? BoardComponent.BLACK : BoardComponent.WHITE; // Remove piece from opposite player
     let piece: number = -1;
+    
     this.piecesComponent[color].forEach((p, index) => {    
       if (p.x === x && p.y === y) {
         piece = index;
@@ -111,31 +161,42 @@ export class BoardComponent implements AfterViewInit {
       }
     });
 
-    console.log(piece, color, this.piecesComponent[color]);
-    
     if (piece >= 0) {
       (color ? this.bPiece : this.wPiece).remove(piece);
       this.piecesComponent[color].splice(piece, 1);
     }
+  }
+  //#endregion Piece
+
+  //#region Player
+  private selectPlayer(player: number) {
+    this.piecesComponent.forEach((p, pId) => {
+      const selected = player === pId;
+      p.forEach(piece => piece.isMovable = selected);
+    });    
+  }
+  //#endregion Player
+
+  //#region Movements
+  private applyMove(piece: PieceComponent, x: number, y: number) {
+    // Check if movement is legal, if it's apply it
+    const [legal, eat] = this.c.moveToIfLegal(piece.type, piece.x, piece.y, x, y);
+    if (! legal)
+      return;
+
+    if (eat)
+      this.removePiece(x, y);
+
+    piece.move(x, y);
+    this.unselectPiece();
+    this.selectPlayer(this.c.getCurrentPlayer());
   }
 
   tryMoveSelectedTo(x: number, y: number) {
     // TODO : Ask if row column is ok
     if (! this.selectedPiece) return;
 
-    // Check if movement is legal, if it's apply it
-    const [legal, eat] = this.c.moveToIfLegal(this.selectedPiece.type, this.selectedPiece.x, this.selectedPiece.y, x, y);
-    console.log(legal, eat, this.selectedPiece, x, y);
-    
-    if (! legal)
-      return;
-      
-    if (eat)
-      this.removePiece(x, y);
-
-    // Apply movement after verification and clean places
-    this.selectedPiece.move(x, y);
-    this.unselectPiece();
+    this.applyMove(this.selectedPiece, x, y);
   }
 
   tryMoveTo(piece: PieceComponent, toPosition: CdkDragEnd) { 
@@ -158,15 +219,7 @@ export class BoardComponent implements AfterViewInit {
     if (! this.selectedPlaces.some(el => el.x === x && el.y === y))
       return;
     
-    // Check if movement is legal, if it's apply it
-    const [legal, eat] = this.c.moveToIfLegal(piece.type, piece.x, piece.y, x, y);
-    if (! legal)
-      return;
-
-    if (eat)
-      this.removePiece(x, y);
-
-    piece.move(x, y);
-    this.unselectPiece();
+    this.applyMove(piece, x, y);
   }
+  //#endregion Movements
 }

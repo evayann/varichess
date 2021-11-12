@@ -2,7 +2,6 @@ import { Player } from "./player";
 import { State } from "./state";
 import { Position } from "./position";
 import { Rules } from "./rules/rules";
-import { ChessRules } from "./rules/chessRules";
 
 export class Chess {
 
@@ -10,8 +9,8 @@ export class Chess {
     private state: State;
     private rules: Rules;
 
-    constructor(fenState: string = "") {
-        this.rules = new ChessRules();
+    constructor(rules: Rules, fenState: string = "") {
+        this.rules = rules;
         this.state = State.fromFen(fenState !== "" ? fenState : this.rules.defaultBoardFen());
         this.currentPlayer = Player.WHITE;
     }
@@ -33,8 +32,10 @@ export class Chess {
                 .concat(this.getEatFor(type, px, py))
                 .some(pos => pos.x === tx && pos.y === ty);
 
-        if (legalMove)
+        if (legalMove) {
+            this.currentPlayer = this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE;
             return [true, this.state.move(px, py, tx, ty)];
+        }
         return [false, false];
     }
 
@@ -54,8 +55,7 @@ export class Chess {
         return this.state.getEatFor(type, x, y, ...this.rules.getEatFor(type));
     }
 
-    getStarter(): number {
+    getCurrentPlayer(): number {
         return this.currentPlayer;
     }
-
 }
