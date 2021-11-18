@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { CdkDragEnd, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
+import { CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { BoardComponent } from 'app/board/board.component';
+import { Role } from 'chessops';
 
 @Component({
   selector: 'app-piece',
@@ -9,7 +10,7 @@ import { BoardComponent } from 'app/board/board.component';
 })
 export class PieceComponent {
   color!: string;
-  type!: string;
+  role!: string;
   board!: BoardComponent;
 
   x!: number;
@@ -20,6 +21,9 @@ export class PieceComponent {
   isSelected: boolean = false;
   isDragging: boolean = false;
 
+  isDeaing: boolean = false;
+  rot: number = 0;
+
   isMovable: boolean = false;
 
   constructor() { }
@@ -29,6 +33,10 @@ export class PieceComponent {
     this.y = y;
     this.dx = x * 100;
     this.dy = y * 100;
+  }
+
+  updateRole(role: string) {
+    this.role = role;
   }
 
   dragPiece(event: CdkDragStart) {
@@ -54,6 +62,12 @@ export class PieceComponent {
     this.board.selectPiece(this);
   }
 
+  async destroy() {
+    this.isDeaing = true;
+    await delay(1000, (time) => this.rot = time);
+    return true;    
+  }
+
   unselect() {
     this.isSelected = false;
   }
@@ -61,4 +75,16 @@ export class PieceComponent {
   getPosition(): [number, number] {
     return [this.dx, this.dy];
   }
+
+  getPieceAcronyme(): string {
+    let type: string = this.role[0];
+    if (this.role === "knight") type = "n";
+    else if (this.role === "royalknight") type = "rk";
+    
+    return type + this.color[0];
+  }
+}
+
+function delay(ms: number, exec: (time: number) => void) {
+  return new Promise(resolve => setTimeout(() => exec(1), ms));
 }

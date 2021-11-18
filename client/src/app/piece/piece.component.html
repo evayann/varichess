@@ -8,10 +8,12 @@
     (mousedown)="select($event)"
 
     class="piece" 
-    [ngClass]="[(isDragging ? 'dragging' : ''), ((isSelected && ! isDragging) ? 'selected' : '')]" 
+    [ngClass]="[(isDragging ? 'dragging' : ''), 
+                ((isSelected && ! isDragging) ? 'selected' : ''),
+                (isDeaing ? 'dead' : '')]" 
     [ngStyle]="{ 
-        'transform': 'translate(' + dx +  '%,' + dy + '%)', 
-        'background-image': 'url(../../assets/piece/' + type.toLowerCase() + color + '.svg)',
+        'transform': 'translate(' + dx +  '%,' + dy + '%) rotate(' + rot + 'deg)', 
+        'background-image': 'url(../../assets/piece/' + getPieceAcronyme() + '.svg)',
         'pointer-events': isMovable ? 'auto' : 'none',
         'z-index': isMovable ? '100' : '50'
     }"

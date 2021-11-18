@@ -14,6 +14,16 @@
     // will-change: transform;
 }
 
+.dead::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-image: url(../../assets/piece/extra/gw.svg);
+}
+
 .dragging {
     cursor: grabbing !important; // Override default cursor during dragging
 }

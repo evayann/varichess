@@ -13,7 +13,12 @@
 }
 
 .circle {
-    background: radial-gradient( red 25%, transparent 26%);
+    background: radial-gradient( green 25%, transparent 26%);
+}
+
+.check {
+    background: radial-gradient( red 55%, transparent 66%);
+    filter: blur(4px);
 }
 
 .position::after {

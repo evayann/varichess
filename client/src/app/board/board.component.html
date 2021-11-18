@@ -1,7 +1,11 @@
-<div id="board" #board
-    (mousedown)="clickOnBoard()" >
-    <ng-container #blackPiece></ng-container>
-    <ng-container #whitePiece></ng-container>
-    <ng-container #boardContent></ng-container>
+<h1> {{ variant }} </h1>
+
+<div id="board" #board 
+    (mousedown)="clickOnBoard()"
+    [ngClass]="chess.isEnd() ? 'board-over' : ''" >
+    <ng-container #pieces></ng-container>
+    <ng-container #infoContent></ng-container>
+    <ng-container #selectedContent></ng-container>
 </div>
-<p> C'est au tour du joueur {{ c.getCurrentPlayer() ? "noir" : "blanc"}} de joueur ! </p>
+
+<p> C'est au tour du joueur {{ chess.turn }} de jouer ! </p>

@@ -14,6 +14,13 @@ export class PositionComponent {
   x!: number;
   y!: number;
 
+  //#region Position Style 
+  static IS_HERE: string = "square";
+  static IS_CHECK: string = "check";
+  static IS_EMPTY: string = "circle";
+  static IS_EATABLE: string = "corner";
+  //#endregion Position Style
+
   constructor() { }
 
   init(type: string, x: number, y: number, board: BoardComponent) {
