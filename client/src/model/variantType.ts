@@ -32,6 +32,6 @@ export interface DropMove {
 
 export type Move = NormalMove | DropMove;
 
-export const RULES = ['a', ...STD_RULES];
+export const RULES = ['zoo', 'explode', 'variantChess', ...STD_RULES];
 
 export type Rules = typeof RULES[number];

@@ -186,4 +186,11 @@ export class Board implements Iterable<[Square, Piece]>, ByRole<SquareSet>, ByCo
     kingOf(color: Color): Square | undefined {
         return this.king.intersect(this[color]).diff(this.promoted).singleSquare();
     }
+
+    /**
+     * Finds the unique unpromoted royalKnight of the given `color`, if any.
+     */
+    royalKnightOf(color: Color): Square | undefined {
+        return this.royalknight.intersect(this[color]).diff(this.promoted).singleSquare();
+    }
 }

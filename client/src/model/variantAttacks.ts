@@ -1,6 +1,7 @@
 import { SquareSet } from "chessops/squareSet";
 import { BySquare, Color, Square } from "chessops/types";
 import { squareFile } from "chessops/util";
+import { bishopAttacks, knightAttacks, queenAttacks } from "chessops/attacks";
 
 
 function computeRange(square: Square, deltas: number[]): SquareSet {
@@ -33,24 +34,40 @@ const CORPORAL_ATTACKS = {
     white: tabulate(sq => computeRange(sq, [7, 8, 9])),
     black: tabulate(sq => computeRange(sq, [-7, -8, -9])),
 };
+const ZEBRA_ATTACKS = tabulate(sq => computeRange(sq, [-16, -8, -4, -3, -2, -1, 1, 2, 3, 4, 8, 16]));
+
 
 /**
  * Gets squares attacked or defended by a unicorn on `square`.
  */
- export function unicornAttacks(square: Square): SquareSet {
+export function unicornAttacks(square: Square): SquareSet {
     return UNICORN_ATTACKS[square];
 }
 
 /**
  * Gets squares attacked or defended by an elephant on `square`.
  */
- export function elephantAttacks(square: Square): SquareSet {
+export function elephantAttacks(square: Square): SquareSet {
     return ELEPHANT_ATTACKS[square];
 }
 
 /**
  * Gets squares attacked or defended by a corporal on `square`.
  */
- export function corporalAttacks(color: Color, square: Square): SquareSet {
+export function corporalAttacks(color: Color, square: Square): SquareSet {
     return CORPORAL_ATTACKS[color][square];
+}
+
+/**
+ * Gets squares attacked or defended by a giraffe on `square`.
+ */
+export function giraffeAttacks(square: Square, occupied: SquareSet): SquareSet {
+    return bishopAttacks(square, occupied).union(knightAttacks(square));
+}
+
+/**
+ * Gets squares attacked or defended by a zebra on `square`.
+ */
+export function zebraAttacks(square: Square, occupied: SquareSet): SquareSet {
+    return ZEBRA_ATTACKS[square].union(queenAttacks(square, occupied));
 }

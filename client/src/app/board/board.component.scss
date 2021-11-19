@@ -1,7 +1,10 @@
-#board {
+.board {
     position: relative;
-    background-image: url("../../assets/Board.svg");
-    width: 500px;
+    background: no-repeat url("../../assets/Board.svg");
+    width: 40vw;
+    @media screen and (max-width: 900px) {
+        width: 40vh;
+    }
     aspect-ratio: 1;
 }
 
@@ -9,7 +12,7 @@
     content: "Game Over";
     background: #000000aa;
     position: relative;
-    width: 500px;
+    width: 100%;
     aspect-ratio: 1;
     z-index: 1000;
     display: flex;
@@ -18,8 +21,11 @@
     text-align: center;
     opacity: 1;
     color: #ff0000;
-    letter-spacing: 5px;
-    font-size: 8em;
+    font-size: 12em;
+    @media screen and (max-width: 900px) {
+        font-size: 6em;
+    }
+    letter-spacing: 10px;
     animation: fade-in 10s linear, text-zoom 5s linear;
 }
 
@@ -29,8 +35,15 @@
 }
 
 @keyframes text-zoom {
-    0% { font-size: 5.5em; }
-    25% { font-size: 6em; }
-    50% { font-size: 7em; }
-    75% { font-size: 8em; }
+    0% { font-size: 7em; }
+    25% { font-size: 9em; }
+    50% { font-size: 11em; }
+}
+
+@media screen and (max-width: 900px) {
+    @keyframes text-zoom {
+        0% { font-size: 2em; }
+        25% { font-size: 4em; }
+        50% { font-size: 5em; }
+    }
 }

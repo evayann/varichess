@@ -1,6 +1,6 @@
 <h1> {{ variant }} </h1>
 
-<div id="board" #board 
+<div class="board" #board 
     (mousedown)="clickOnBoard()"
     [ngClass]="chess.isEnd() ? 'board-over' : ''" >
     <ng-container #pieces></ng-container>

@@ -8,6 +8,11 @@
     height: 100%;
 }
 
+.core {
+    background: black;
+    color: grey;
+}
+
 app-game {
     display: flex;
     align-items: center;
@@ -23,6 +28,7 @@ button#menu {
 }
 
 .nav {
+    background: grey;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -30,4 +36,10 @@ button#menu {
 
 .nav > div#space {
     flex-grow: 2;
+}
+
+.user-picture {
+    border-radius: 35%;
+    background: white;
+    margin: 10px;
 }

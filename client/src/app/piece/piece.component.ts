@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { BoardComponent } from 'app/board/board.component';
-import { Role } from 'chessops';
-
+import { position } from './piece.animation';
 @Component({
   selector: 'app-piece',
   templateUrl: './piece.component.html',
-  styleUrls: ['./piece.component.scss']
+  styleUrls: ['./piece.component.scss'],
+  animations: [position]
 })
 export class PieceComponent {
   color!: string;
@@ -20,9 +20,9 @@ export class PieceComponent {
 
   isSelected: boolean = false;
   isDragging: boolean = false;
+  lifeState: string = "live";
 
-  isDeaing: boolean = false;
-  rot: number = 0;
+  dyingTime: number = 1000;
 
   isMovable: boolean = false;
 
@@ -62,9 +62,9 @@ export class PieceComponent {
     this.board.selectPiece(this);
   }
 
-  async destroy() {
-    this.isDeaing = true;
-    await delay(1000, (time) => this.rot = time);
+  async destroy() {    
+    this.lifeState = "dead";
+    await delay(this.dyingTime);
     return true;    
   }
 
@@ -85,6 +85,6 @@ export class PieceComponent {
   }
 }
 
-function delay(ms: number, exec: (time: number) => void) {
-  return new Promise(resolve => setTimeout(() => exec(1), ms));
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(() => resolve(1), ms));
 }

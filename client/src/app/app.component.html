@@ -3,20 +3,17 @@
     <div class="nav">
       <p> VariChess - Logo </p>
       <h2> Variante </h2>
-      <button mat-raised-button (click)="selectVariant('chess')"> Echec </button>
-      <button mat-raised-button (click)="selectVariant('race')"> Echecourse </button>
-      <button mat-raised-button (click)="selectVariant('atomic')"> EchecEtBoom </button>
-      <button mat-raised-button (click)="selectVariant('explode')"> Echexplode </button>
-      <button mat-raised-button (click)="selectVariant('zoo')"> EchecOZoo </button>
+
+      <button *ngFor="let r of rules" mat-raised-button (click)="selectVariant(r)"> {{ r }} </button>
 
       <div id="space"></div>
       
       <h2> Utilisateur </h2>
-      <button mat-raised-button> User </button> 
+      <div #user class="user-picture"></div>
       <button mat-raised-button (click)="drawer.toggle()"> Close </button>
     </div>
   </mat-drawer>
-  <mat-drawer-content>
+  <mat-drawer-content class="core">
     <app-game #board></app-game>
     <button id="menu" mat-raised-button (click)="drawer.toggle()" *ngIf="!drawer.opened"> Menu </button>
   </mat-drawer-content>

@@ -3,13 +3,14 @@ import { Component, ComponentFactoryResolver, ViewChild, AfterViewInit, Componen
 import { PieceComponent } from 'app/piece/piece.component';
 import { PositionComponent } from 'app/position/position.component';
 
-import { Chess, Move, Piece, SquareSet } from 'chessops/';
+import { Chess, Move, Piece } from 'chessops/';
 import { Atomic, RacingKings, Horde } from 'chessops/variant';
 import { Explode } from 'model/variants';
 
 import { Zoo } from 'model/variantChess';
 
 import { parseSquare, toSquare } from 'model/util';
+import { Board } from 'model/variantBoard';
 
 export interface Point {
   x: number;
@@ -115,8 +116,8 @@ export class BoardComponent implements AfterViewInit {
       this.createPiece(piece, pos);
 
     for (const piece of deadPieces) 
-      // piece.destroy().then(() => this.removePiece(piece));
-      this.removePiece(piece);
+      piece.destroy().then(() => this.removePiece(piece));
+      // this.removePiece(piece);
 
     this.updatePlayer();
   }
@@ -268,7 +269,12 @@ export class BoardComponent implements AfterViewInit {
     this.updateUIFromModel();
 
     const otherPlayer: "white" | "black" = this.chess.turn;
-    if (this.chess.isCheck())
-      this.createInfo(PositionComponent.IS_CHECK, ...this.parseSquareOnBoard(this.chess.board.kingOf(otherPlayer) as number));
+    if (this.chess.isCheck()) {
+      // Get the winning piece. For chessops it's king for zoo it's royalknight
+      const masterPiece: number = ((this.chess instanceof Zoo) ? 
+        (this.chess.board as Board).royalKnightOf(otherPlayer) : this.chess.board.kingOf(otherPlayer)) as number;
+      
+      this.createInfo(PositionComponent.IS_CHECK, ...this.parseSquareOnBoard(masterPiece));
+    }
   }
 }
