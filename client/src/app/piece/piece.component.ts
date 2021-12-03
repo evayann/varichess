@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { BoardComponent } from 'app/board/board.component';
 import { position } from './piece.animation';
+import { getPieceAcronyme } from 'model/util';
+import { Piece } from 'model/variantType';
+
 @Component({
   selector: 'app-piece',
   templateUrl: './piece.component.html',
@@ -9,9 +12,11 @@ import { position } from './piece.animation';
   animations: [position]
 })
 export class PieceComponent {
-  color!: string;
-  role!: string;
+  @Input() color!: string;
+  @Input() role!: string;
   board!: BoardComponent;
+
+  @HostBinding("style.--nb-cell") get pieceSize() { return this.board.nbCell; }
 
   x!: number;
   y!: number;
@@ -25,6 +30,7 @@ export class PieceComponent {
   dyingTime: number = 1000;
 
   isMovable: boolean = false;
+  interaction: boolean = true;
 
   constructor() { }
 
@@ -57,9 +63,13 @@ export class PieceComponent {
     // Stop propagation to don't trigger parent element when click on a piece on board
     event.stopPropagation();
 
+    // Check if we can interact with piece
+    if (! this.interaction)
+      return;
+
     // And select this one 
     this.isSelected = true;
-    this.board.selectPiece(this);
+    this.board.selectPieceFromComponent(this);
   }
 
   async destroy() {    
@@ -77,11 +87,7 @@ export class PieceComponent {
   }
 
   getPieceAcronyme(): string {
-    let type: string = this.role[0];
-    if (this.role === "knight") type = "n";
-    else if (this.role === "royalknight") type = "rk";
-    
-    return type + this.color[0];
+    return getPieceAcronyme({role: this.role, color: this.color} as Piece);
   }
 }
 

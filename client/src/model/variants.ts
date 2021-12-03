@@ -2,10 +2,13 @@ import { Result } from '@badrap/result';
 import { Piece, Setup, Square } from 'chessops';
 import { Chess, PositionError } from 'chessops/chess';
 import { parseSquare, toSquare } from './util';
+import { Rules } from './variantType';
 
 export class Explode extends Chess {
+    variantRules: Rules;
     protected constructor() {
         super();
+        this.variantRules = "explode";
     }
     
     static default(): Explode {

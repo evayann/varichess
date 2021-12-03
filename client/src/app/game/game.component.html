@@ -1,0 +1,11 @@
+<div class="game">
+    <div class="board">
+      <h1> {{ variant }} </h1>
+      <app-board #board (eventChess)="setChess($event)" [variant]="variant"> </app-board>
+      <p> Player {{ chess?.turn }}, you can play ! </p>
+    </div>
+    <div class="rules">
+      <app-rules [rules]="getRulesList()"> </app-rules>
+      <app-rules-piece [pieces]="getPiecesList()"> </app-rules-piece>
+    </div>
+</div>

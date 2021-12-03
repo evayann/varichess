@@ -1,6 +1,6 @@
 .position {
     position: absolute;
-    width: 12.5%;
+    width: calc(100% / var(--nb-cell));
     aspect-ratio: 1;
 }
 
@@ -19,6 +19,11 @@
 .check {
     background: radial-gradient( red 55%, transparent 66%);
     filter: blur(4px);
+}
+
+.castle {
+    background: radial-gradient(transparent 0%, transparent 71%, blue 72%);
+    z-index: 500;
 }
 
 .position::after {

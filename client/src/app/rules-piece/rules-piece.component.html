@@ -1,0 +1,17 @@
+<div class="rules-panel">
+    <div class="header">
+        <button mat-fab color="primary" aria-label="Go to previous piece description" (click)="previousPiece()"> 
+            <mat-icon> keyboard_arrow_left </mat-icon>
+        </button>      
+
+        <div>
+            <img [src]="'../../assets/piece/' + getCurrentPieceAcronyme() + '.svg'" width="50%"/>
+            <p> {{ currentPiece }} </p>    
+        </div>
+        
+        <button mat-fab color="primary" aria-label="Go to next piece description" (click)="nextPiece()"> 
+            <mat-icon> keyboard_arrow_right </mat-icon>
+        </button>
+    </div>
+    <app-board #board variant="empty" size="30vw" [animation]="false" [interact]="false" [nbCell]=7 (eventChess)="setChess($event)"> </app-board>
+</div>

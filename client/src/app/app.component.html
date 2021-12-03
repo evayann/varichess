@@ -1,20 +1,37 @@
-<mat-drawer-container id="container" hasBackdrop="false">
-  <mat-drawer #drawer mode="side">
+<mat-sidenav-container id="container">
+  <mat-sidenav #sidenav [mode]="true ? 'over' : 'side'">
     <div class="nav">
-      <p> VariChess - Logo </p>
-      <h2> Variante </h2>
+      <h2> Variantes </h2>
 
-      <button *ngFor="let r of rules" mat-raised-button (click)="selectVariant(r)"> {{ r }} </button>
+      <a *ngFor="let r of rules" class="variant" mat-raised-button color="primary" [routerLink]="['/variant', r]" (click)="selectVariant(r)"> {{ r }} </a>
 
       <div id="space"></div>
       
-      <h2> Utilisateur </h2>
-      <div #user class="user-picture"></div>
-      <button mat-raised-button (click)="drawer.toggle()"> Close </button>
+      <button mat-fab color="primary" aria-label="Close Menu" (click)="sidenav.toggle()"> 
+        <mat-icon> close </mat-icon>
+      </button>
     </div>
-  </mat-drawer>
-  <mat-drawer-content class="core">
-    <app-game #board></app-game>
-    <button id="menu" mat-raised-button (click)="drawer.toggle()" *ngIf="!drawer.opened"> Menu </button>
-  </mat-drawer-content>
-</mat-drawer-container>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div *ngIf="variant !== ''; else chooseVariant" style="height: 100%;">
+      <ng-container *ngIf="isPlaying(); else informations">
+        <app-game [variant]="variant"> </app-game>
+      </ng-container>
+
+      <ng-template #informations>
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%; padding: 20px 0;">
+          <app-variant-rules [variant]="variant" [rules]="getRulesList()"> </app-variant-rules>
+          <button mat-raised-button style="width: 10%; margin-top: 10px;" (click)="setPlay(true)"> Play </button>
+        </div>
+      </ng-template>
+    </div>
+
+    <ng-template #chooseVariant>
+      <p style="text-align: center;"> To play, please select a variant in menu </p>
+    </ng-template>
+
+    <app-overlay [sidenav]="sidenav" [user]="user"></app-overlay>
+
+    <!-- <router-outlet></router-outlet> -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

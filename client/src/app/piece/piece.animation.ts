@@ -7,11 +7,6 @@ export const position =
             transformOrigin: "bottom center",
             opacity: 1
         }),  {params: {x: 0, y: 0}}),
-        // state('dead', style({
-        //     transform: "translate({{ x }}%, {{ y }}%) rotate(90deg)",
-        //     transformOrigin: "bottom center",
-        //     opacity:0
-        // }),  {params: {x: 0, y: 0}}),
         transition(
             'live => dead', 
             animate('{{ time }}ms ease-out', keyframes([

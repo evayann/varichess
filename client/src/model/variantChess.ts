@@ -31,7 +31,7 @@ export class Chess extends StdChess {
     
     constructor(variantRules?: Rules) {
         super();
-        this.variantRules = variantRules || "variantChess";
+        this.variantRules = variantRules || "empty";
     }
 
     ctx(): Context {
@@ -168,6 +168,7 @@ export class Chess extends StdChess {
         }
     
         if (legal) pseudo = pseudo.union(legal);
+        
         return pseudo;
     }
 }
@@ -176,30 +177,54 @@ function rookCastlesTo(color: Color, side: CastlingSide): Square {
     return color === 'white' ? (side === 'a' ? 3 : 5) : side === 'a' ? 59 : 61;
 }
 
+/** An Empty Board for display some stuff about piece */
+export class EmptyChess extends Chess {
+  constructor() {
+    super("empty");
+  }
+
+  static default(): Chess {
+    const pos = new this();
+    pos.board = Board.empty() as StdBoard;
+    pos.pockets = undefined;
+    pos.turn = 'white';
+    pos.castles = Castles.default();
+    pos.epSquare = undefined;
+    pos.remainingChecks = undefined;
+    pos.halfmoves = 0;
+    pos.fullmoves = 1;
+    return pos;
+  }
+
+  isEnd(ctx?: Context): boolean {
+    return false;
+  }
+}
+
 export class Zoo extends Chess {
-    constructor() {
-        super("zoo");
-    }
+  constructor() {
+    super("zoo");
+  }
 
-    static default(): Chess {
-        const pos = new this();
-        pos.board = Board.zoo() as StdBoard;
-        pos.pockets = undefined;
-        pos.turn = 'white';
-        pos.castles = Castles.default();
-        pos.epSquare = undefined;
-        pos.remainingChecks = undefined;
-        pos.halfmoves = 0;
-        pos.fullmoves = 1;
-        return pos;
-    }
+  static default(): Chess {
+    const pos = new this();
+    pos.board = Board.zoo() as StdBoard;
+    pos.pockets = undefined;
+    pos.turn = 'white';
+    pos.castles = Castles.default();
+    pos.epSquare = undefined;
+    pos.remainingChecks = undefined;
+    pos.halfmoves = 0;
+    pos.fullmoves = 1;
+    return pos;
+  }
 
-    isCheck(): boolean {        
-        const royalKnight = (this.board as Board).royalKnightOf(this.turn);
-        return defined(royalKnight) && this.royalKnightAttackers(royalKnight, opposite(this.turn), this.board.occupied).nonEmpty();
-    }
+  isCheck(): boolean {        
+    const royalKnight = (this.board as Board).royalKnightOf(this.turn);
+    return defined(royalKnight) && this.royalKnightAttackers(royalKnight, opposite(this.turn), this.board.occupied).nonEmpty();
+  }
 
-    isEnd(ctx?: Context): boolean {
-        return [...(this.board as Board).royalknight].length < 2;
-    }
+  isEnd(ctx?: Context): boolean {
+    return [...(this.board as Board).royalknight].length < 2;
+  }
 }

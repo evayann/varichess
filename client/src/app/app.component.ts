@@ -1,10 +1,12 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { BoardComponent } from "./board/board.component";
 
 import { createAvatar } from '@dicebear/avatars';
 import * as style from '@dicebear/big-smile';
-
-import { RULES } from "model/variantType";
+import { Piece, RULES } from "model/variantType";
+import { Chess } from "model/variantChess";
+import { getRulesList, RulesList } from "model/chessRules";
+import { MatSidenav } from "@angular/material/sidenav";
 
 @Component({
   selector: "app-root",
@@ -12,22 +14,57 @@ import { RULES } from "model/variantType";
   styleUrls: ["./app.component.scss"]
 })
 
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
 
   @ViewChild('board') board!: BoardComponent; 
-  @ViewChild('user') userContainer!: ElementRef; 
+  @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  rules: string[] = RULES;
+  variant: string = "";
+  chess: Chess | undefined;
+  rules:readonly string[] = RULES;
+  user!: string;
+
+  private play: boolean = false;
   
-  constructor() {}
-  ngAfterViewInit(): void {
-    this.userContainer.nativeElement.innerHTML = createAvatar(style, {
+  constructor() {
+    this.user = createAvatar(style, {
       seed: randomSeed(25)
     });
   }
+  
+  setPlay(state: boolean) {
+    this.play = state;
+  }
 
+  isPlaying() {
+    return this.play;
+  }
+  
   selectVariant(type: string) {
-    this.board.selectVariant(type);
+    this.play = false; // Reset previous game
+    this.variant = type;
+    this.sidenav.toggle();
+  }
+
+  setChess(chess: Chess) {
+    this.chess = chess;
+  }
+
+  getPiecesList(): Piece[] {
+    const pieces: Piece[] = [];
+    
+    if (!this.chess) return pieces;
+
+    for (let i = 0; i < 64; i++) {
+      let piece: Piece | undefined;
+      if ((piece = this.chess.board.get(i)) && ! pieces.some(p => p.role === piece?.role))
+        pieces.push(piece);
+    }
+    return pieces;
+  }
+
+  getRulesList(): RulesList {
+    return getRulesList(this.variant);
   }
 }
 
@@ -35,9 +72,7 @@ function randomSeed(length: number) {
   var result           = '';
   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-    result += characters.charAt(Math.floor(Math.random() * 
-charactersLength));
- }
+  for ( var i = 0; i < length; i++ ) 
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
  return result;
 }

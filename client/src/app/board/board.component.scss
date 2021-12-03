@@ -1,24 +1,27 @@
 .board {
-    position: relative;
-    background: no-repeat url("../../assets/Board.svg");
-    width: 40vw;
-    @media screen and (max-width: 900px) {
-        width: 40vh;
-    }
-    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.board > div {
+    width: 75%;
 }
 
 .board-over::after {
     content: "Game Over";
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
     background: #000000aa;
     position: relative;
     width: 100%;
     aspect-ratio: 1;
     z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
     opacity: 1;
     color: #ff0000;
     font-size: 12em;

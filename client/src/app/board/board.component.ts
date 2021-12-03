@@ -1,16 +1,17 @@
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
-import { Component, ComponentFactoryResolver, ViewChild, AfterViewInit, ComponentFactory, ViewContainerRef, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, ViewChild, AfterViewInit, ComponentFactory, ViewContainerRef, ElementRef, ChangeDetectorRef, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { PieceComponent } from 'app/piece/piece.component';
 import { PositionComponent } from 'app/position/position.component';
 
-import { Chess, Move, Piece } from 'chessops/';
-import { Atomic, RacingKings, Horde } from 'chessops/variant';
+import { Chess, Move } from 'chessops/';
+import { Atomic, RacingKings, Horde, KingOfTheHill, Antichess } from 'chessops/variant';
 import { Explode } from 'model/variants';
 
-import { Zoo } from 'model/variantChess';
+import { Chess as VariantChess, EmptyChess, Zoo } from 'model/variantChess';
 
 import { parseSquare, toSquare } from 'model/util';
 import { Board } from 'model/variantBoard';
+import { Piece } from 'model/variantType';
 
 export interface Point {
   x: number;
@@ -18,11 +19,11 @@ export interface Point {
 }
 
 @Component({
-  selector: 'app-game',
+  selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
-export class BoardComponent implements AfterViewInit {
+export class BoardComponent implements OnChanges, AfterViewInit {
 
   @ViewChild('board') board!: ElementRef;
 
@@ -30,7 +31,13 @@ export class BoardComponent implements AfterViewInit {
   @ViewChild('infoContent', {read: ViewContainerRef}) infoContent!: ViewContainerRef;
   @ViewChild('selectedContent', {read: ViewContainerRef}) selectedContent!: ViewContainerRef;
   
-  variant: string;
+  @Input() interact: boolean;
+  @Input() animation: boolean;
+  @Input() variant: string;
+  @Input() nbCell: 8 | 7 | 5 = 8;
+
+  chess: Chess;
+  @Output() eventChess: EventEmitter<VariantChess> = new EventEmitter<VariantChess>();
 
   private pieceFactory!: ComponentFactory<PieceComponent>;
   private positionFactory!: ComponentFactory<PositionComponent>;
@@ -40,13 +47,20 @@ export class BoardComponent implements AfterViewInit {
   private infoPositions: Array<Point> = [];
   private piecesComponent: Array<PieceComponent> = [];
 
-  chess: Chess;
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
     private cd: ChangeDetectorRef) {
       this.chess = Chess.default();
       this.variant = "chess";
+      this.animation = true;
+      this.interact = true;
+      this.eventChess.emit(this.chess as VariantChess);
+  }
+
+  ngOnChanges() {
+    if (this.variant)
+      this.selectVariant(this.variant);
   }
 
   ngAfterViewInit() {
@@ -59,14 +73,17 @@ export class BoardComponent implements AfterViewInit {
     this.cd.detectChanges();
   }
 
-  selectVariant(type: string) {
+  async selectVariant(type: string) {
+    // Before select a variant, need to wait component factory
+    await Promise.resolve(this.pieceFactory && this.positionFactory);
+
     let chess: Chess = Chess.default();
 
     switch (type) {
       case "atomic":
         chess = Atomic.default();
         break;
-      case "race": 
+      case "racingkings": 
         chess = RacingKings.default();
         break;
       case "horde":
@@ -77,21 +94,32 @@ export class BoardComponent implements AfterViewInit {
         break;
       case "zoo":
         chess = Zoo.default();
+        break;
+      case "kingofthehill":
+        chess = KingOfTheHill.default();
+        break;
+      case "empty":
+        chess = EmptyChess.default();
+        break;
+      case "antichess":
+        chess = Antichess.default();
+        break;
     }
     this.chess = chess;
     this.variant = type;
 
     this.cleanChess();
     this.updateUIFromModel();
+    this.eventChess.emit(this.chess as VariantChess);
   }
 
   //#region Board
   clickOnBoard() {    
-    if (this.selectedPiece)
+    if (this.selectedPiece && this.interact)
       this.unselectPiece();
   }  
 
-  private updateUIFromModel() {
+  updateUIFromModel() {
     const currPieces: Array<PieceComponent> = this.piecesComponent;
     const currBoard: Array<[number, Piece]> = [... this.chess.board];
     const newPieces: Array<[number, Piece]> = [];
@@ -99,7 +127,12 @@ export class BoardComponent implements AfterViewInit {
     
     for (const [pos, p] of currBoard) {
       const [x, y] = parseSquare(pos);
-      if (! currPieces.some((piece) => piece.x === x && piece.y === y))
+      
+      // Check if piece is on size of board (model have fixed board size of 8 cells but our board is modular !)
+      if (! (0 <= x && x < this.nbCell && 0 <= y && y < this.nbCell))
+        continue;
+
+      if (! currPieces.some(piece => piece.x === x && piece.y === y))
         newPieces.push([pos, p]);
     }
 
@@ -112,12 +145,11 @@ export class BoardComponent implements AfterViewInit {
       }
     }
 
+    for (const piece of deadPieces) 
+      this.animation ? piece.destroy().then(() => this.removePiece(piece)) : this.removePiece(piece);
+
     for (const [pos, piece] of newPieces)
       this.createPiece(piece, pos);
-
-    for (const piece of deadPieces) 
-      piece.destroy().then(() => this.removePiece(piece));
-      // this.removePiece(piece);
 
     this.updatePlayer();
   }
@@ -132,7 +164,20 @@ export class BoardComponent implements AfterViewInit {
   //#endregion Board
 
   //#region Select
-  selectPiece(piece: PieceComponent) {
+  /**
+   * Select first piece with color & role
+   * @param piece the color and role of piece to select 
+   */
+  selectPiece(piece: Piece) {
+    this.piecesComponent.forEach(p => {
+      if (p.color == piece.color && p.role === piece.role) {
+        this.selectPieceFromComponent(p);
+        return;
+      }
+    });
+  }
+
+  selectPieceFromComponent(piece: PieceComponent) {
     // If piece already selected, not reselect it but unselect it
     if (this.selectedPiece === piece) {
       this.unselectPiece();
@@ -146,16 +191,32 @@ export class BoardComponent implements AfterViewInit {
     this.selectedPiece = piece;
     this.createSelected(PositionComponent.IS_HERE, ...piece.getPosition());
 
-    for (const p of this.chess.dests(toSquare(piece.x, piece.y)))
-      this.createSelected(
-        this.chess.board.get(p) === undefined ? PositionComponent.IS_EMPTY : PositionComponent.IS_EATABLE,
-       ...this.parseSquareOnBoard(p)
-       );
+    const selectType: (piece: Piece | undefined) => string = piece => {
+      if (piece === undefined) 
+        return PositionComponent.IS_EMPTY;
+      if (piece.color === this.chess.turn) {
+        if (piece.role === "rook")
+          return PositionComponent.IS_CASTLE;
+      }
+      else 
+        return PositionComponent.IS_EATABLE;
+        
+      return "nope";
+    };
+
+    for (const p of this.chess.dests(toSquare(piece.x, piece.y))) {
+      const [x, y] = parseSquare(p);
+      // Check if piece is on size of board (model have fixed board size of 8 cells but our board is modular !)
+      if (! (0 <= x && x < this.nbCell && 0 <= y && y < this.nbCell))
+        continue;
+
+      this.createSelected(selectType(this.chess.board.get(p)), ...this.parseSquareOnBoard(p));
+    }
   }
 
   unselectPiece() {  
     this.selectedPiece = undefined;
-    this.selectedContent.clear();
+    this.selectedContent?.clear();
     this.selectedPositions = [];
   }
   //#endregion Select
@@ -168,7 +229,7 @@ export class BoardComponent implements AfterViewInit {
 
   private createPosition(arr: Array<Point>, view: ViewContainerRef, type: string, x: number, y: number) {  
     const ref = view.createComponent(this.positionFactory);
-    ref.instance.init(type, x, y, this);
+    ref.instance.init(type, x, y, this.interact, this);
     arr.push({x: x / 100, y: y / 100});
   }
 
@@ -185,6 +246,7 @@ export class BoardComponent implements AfterViewInit {
     instance.role = piece.role;
     instance.color = piece.color;
     instance.move(...parseSquare(pos));
+    instance.interaction = this.interact;
     instance.board = this;
     this.piecesComponent.push(instance);
   }
@@ -212,8 +274,7 @@ export class BoardComponent implements AfterViewInit {
     
     piece.move(x, y);
 
-    if (piece.role === "pawn" && (y === 0 || y === 7)) {
-      // TODO Draw div hover board with z-index who is put on boarInfo
+    if (piece.role === "pawn" && (y === 0 || y === this.nbCell)) {
       move.promotion = "queen";
       piece.updateRole("queen");
     }
@@ -237,7 +298,7 @@ export class BoardComponent implements AfterViewInit {
     const el = this.board.nativeElement;
     const {top, left} = el.getBoundingClientRect();
     const size: number = el.clientHeight;
-    const gridSize: number = size / 8;
+    const gridSize: number = size / this.nbCell;
         
     // Verify position
     const toX: number = toPosition.dropPoint.x - left;

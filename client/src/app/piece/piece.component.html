@@ -3,7 +3,7 @@
     cdkDragBoundary="#board"
     (cdkDragStarted)="dragPiece($event)"
     (cdkDragEnded)="dropPiece($event)"
-    [cdkDragDisabled]="!isMovable"
+    [cdkDragDisabled]="!isMovable || !interaction"
 
     (mousedown)="select($event)"
 
@@ -15,6 +15,5 @@
         'background-image': 'url(../../assets/piece/' + getPieceAcronyme() + '.svg)',
         'pointer-events': isMovable ? 'auto' : 'none',
         'z-index': isMovable ? '100' : '50'
-    }"
-    >
+    }" >
 </div>

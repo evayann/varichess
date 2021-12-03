@@ -1,0 +1,50 @@
+$x-offset: 15px;
+$y-offset: 15px;
+
+:host {
+    --width: 132px;
+    --height: 132px;
+}
+
+@media screen and (max-width: 600px) {
+    :host {
+        --width: 66px;
+        --height: 66px;
+    }
+}
+
+.position {
+    position: fixed;
+}
+
+.menuButton {
+    top: $y-offset;
+    left: $x-offset;
+}
+
+.logoButton {
+    top: $y-offset;
+    right: $x-offset;
+
+    width: var(--width) !important;
+    height: var(--height) !important;
+
+    background-image: url(../../assets/VariChess.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+.userButton {
+    bottom: $y-offset;
+    right: $x-offset;
+
+    width: var(--width);
+    height: var(--height);
+}
+
+::ng-deep .userButton > span.mat-button-wrapper {
+    width: calc(#{var(--width)} - 32px);
+    height: calc(#{var(--height)} - 32px);
+    padding: 0;
+}

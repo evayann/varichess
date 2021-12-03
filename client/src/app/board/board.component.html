@@ -1,11 +1,14 @@
-<h1> {{ variant }} </h1>
-
-<div class="board" #board 
-    (mousedown)="clickOnBoard()"
-    [ngClass]="chess.isEnd() ? 'board-over' : ''" >
-    <ng-container #pieces></ng-container>
-    <ng-container #infoContent></ng-container>
-    <ng-container #selectedContent></ng-container>
+<div class="board">
+    <div #board 
+        (mousedown)="clickOnBoard()"
+        [ngClass]="chess.isEnd() ? 'board-over' : ''" 
+        [ngStyle]="{
+            'aspect-ratio': 1,
+            'position': 'relative',
+            'background': 'no-repeat url(../../assets/Board' + nbCell + '.svg)'
+        }" >
+        <ng-container #pieces></ng-container>
+        <ng-container #infoContent></ng-container>
+        <ng-container #selectedContent></ng-container>
+    </div>
 </div>
-
-<p> C'est au tour du joueur {{ chess.turn }} de jouer ! </p>

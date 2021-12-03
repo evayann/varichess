@@ -1,5 +1,5 @@
 <div class="position"   
     [ngClass]="type"
     [ngStyle]="{ 'transform': 'translate(' + x +  '%,' + y + '%)' }"
-    (mousedown)="goTo()" >
+    (mousedown)="goTo($event)" >
 </div>

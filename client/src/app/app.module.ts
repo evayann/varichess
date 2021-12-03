@@ -10,13 +10,25 @@ import { AppComponent } from "./app.component";
 import { BoardComponent } from './board/board.component';
 import { PieceComponent } from './piece/piece.component';
 import { PositionComponent } from './position/position.component';
+import { RulesComponent } from './rules/rules.component';
+import { OverlayComponent } from './overlay/overlay.component';
+import { VariantRulesComponent } from './variant-rules/variant-rules.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { GameComponent } from './game/game.component';
+import { RulesPieceComponent } from './rules-piece/rules-piece.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BoardComponent,
     PieceComponent,
-    PositionComponent
+    PositionComponent,
+    RulesComponent,
+    OverlayComponent,
+    VariantRulesComponent,
+    PageNotFoundComponent,
+    GameComponent,
+    RulesPieceComponent
   ],
   imports: [
     BrowserModule,

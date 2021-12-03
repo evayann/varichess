@@ -1,0 +1,303 @@
+:host {
+    width: 100%;
+}
+
+.variant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.content {
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+    align-items: center;
+    margin: 50px;
+    @media screen and (max-width: 500px) {
+        margin: 0;
+        width: 95%;
+    }
+}
+
+.content > div {
+    position: relative;
+    width: 25%;
+
+    @media screen and (max-width: 600px) {
+        width: 100%;
+    }
+}
+
+.content > div > * {
+    box-sizing: content-box;
+}
+
+.block {
+    display: block;
+}
+
+app-rules-piece {
+    width: max(60%, 20rem);
+}
+
+@media screen and (min-width: 1100px) {
+    app-rules-piece {
+        width: 30%;
+    }
+}
+
+@mixin center {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+// Checkmate
+
+.checkmate {
+    @include center;
+    transform-origin: bottom center;
+    animation: rotate-king 3s ease infinite;
+}
+
+@keyframes rotate-king {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(90deg);
+    }
+}
+
+.piece-who-checkmate {
+    transform-origin: top left;
+    animation: rotate-piece 3s ease infinite;
+}
+
+@keyframes rotate-piece {
+    0% {
+        transform: rotate(45deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+// Explode
+
+.explode {
+    clip-path: polygon(23% 81%, 35% 89%, 47% 78%, 59% 82%, 68% 74%, 72% 64%, 84% 67%, 84% 57%, 82% 45%, 89% 38%, 85% 27%, 72% 29%, 60% 15%, 46% 19%, 33% 13%, 39% 33%, 32% 35%, 18% 33%, 12% 47%, 30% 50%, 21% 61%, 34% 62%);
+}
+
+$colors: red, orange, yellow;
+@for $i from 1 to 4 {
+    .explode:nth-child(#{$i}) {
+        $prct: calc(100% / #{$i});
+
+        position: absolute;
+        top: calc((100% - #{$prct}) / 2);
+        left: calc((100% - #{$prct}) / 2);
+        width: $prct;
+        height: $prct;
+
+        animation: explosion 3s ease infinite;
+        transform: rotate(random() * 360deg);
+
+        background-color: nth($colors, $i);
+    }
+}
+
+@keyframes explosion {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+// X Check
+
+.xcheck::before {
+    content: '1';
+    color: crimson;
+    opacity: 1;
+    @include center;
+    text-align: center;
+    font-size: 5em;
+    transform-origin: center center;
+    animation: counter 5s ease infinite;
+}
+
+@keyframes counter {
+    0% { transform: scale(0); }
+    16.5% { transform: scale(1); content: '1'; }
+    33% { transform: scale(0); }
+    49.5% { transform: scale(1); content: '2'; }
+    66% { transform: scale(0); }
+    82.5% { transform: scale(1); content: '3'; }
+    100% { transform: scale(0); }
+}
+
+@mixin drop-shadow($x, $y, $s, $c) {
+    filter: drop-shadow($x $y $s $c);
+    -webkit-filter: drop-shadow($x $y $s $c);
+}
+
+.check-king {
+    animation: check-shadow 5s ease infinite;
+}
+
+@keyframes check-shadow {
+    0% { @include drop-shadow(0, 0, .5rem, transparent); }
+    16.5% { @include drop-shadow(0, 0, .5rem, crimson); }
+    33% { @include drop-shadow(0, 0, .5rem, transparent);}
+    49.5% { @include drop-shadow(0, 0, .5rem, crimson); }
+    66% { @include drop-shadow(0, 0, .5rem, transparent); }
+    82.5% { @include drop-shadow(0, 0, .5rem, crimson); }
+    100% { @include drop-shadow(0, 0, .5rem, transparent); }
+}
+
+// Racing king
+
+.top-line {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+
+    background-color: rgba(220, 20, 60, .6);
+}
+
+.king-to-top {
+    @include center;
+}
+
+.king-to-top > img {
+    transform: translateY(300%);
+    animation: move-king-to-top 5s ease infinite;
+}
+
+@keyframes move-king-to-top {
+    to {
+        transform: translateY(0%);
+    }
+}
+
+// King of Hill
+
+.center-square {
+    position: absolute;
+
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+
+    background-color: rgba(220, 20, 60, .6);
+}
+
+.king-of-the-hill {
+    @include center;
+}
+
+.king-of-the-hill > img {
+    transform: translate(100%, 300%);
+    animation: move-king-to-center 5s ease infinite;
+}
+
+@keyframes move-king-to-center {
+    to {
+        transform: translate(100%, 200%);
+    }
+}
+
+// Explose Row Column
+$explode-speed: 3s;
+
+.explose-row-column {
+    @include center;
+}
+
+.explose-row-column > img#king {
+    position: absolute;
+    transform: translateY(300%);
+}
+
+.explose-row-column > img#pawn1 {
+    position: absolute;
+    transform: translate(200%, 200%);
+    animation: piece-eat $explode-speed ease-out infinite;
+}
+
+.explose-row-column > img#pawn2 {
+    position: absolute;
+    transform: translate(100%, 300%);
+    animation: eat-pawn1 $explode-speed linear infinite;
+}
+
+.explose-row-column > img#bishop {
+    position: absolute;
+    transform: translate(200%);
+    animation: piece-eat $explode-speed ease-out infinite;
+}
+
+@keyframes eat-pawn1 {
+    0% { transform: translate(100%, 300%); }
+    80% { transform: translate(200%, 200%); }
+    100% { transform: translate(200%, 200%); }
+}
+
+// Explose Arround
+
+.explose-arround {
+    @include center;
+}
+
+.explose-arround > img#king1 {
+    position: absolute;
+    transform: translateY(400%);
+}
+
+.explose-arround > img#king2 {
+    position: absolute;
+    transform: translateX(200%);
+    animation: piece-eat $explode-speed ease-out infinite;
+}
+
+.explose-arround > img#pawn1 {
+    position: absolute;
+    transform: translate(200%, 100%);
+    animation: piece-eat $explode-speed ease-out infinite;
+}
+
+.explose-arround > img#pawn2 {
+    position: absolute;
+    transform: translate(100%, 200%);
+    animation: eat-pawn1-arround $explode-speed linear infinite;
+}
+
+.explose-arround > img#bishop {
+    position: absolute;
+    transform: translate(100%);
+    animation: piece-eat $explode-speed ease-out infinite;
+}
+
+@keyframes eat-pawn1-arround {
+    0% { transform: translate(100%, 200%); opacity: 1; }
+    80% { transform: translate(200%, 100%); opacity: 1; }
+    100% { transform: translate(200%, 100%); opacity: 0; }
+}
+
+@keyframes piece-eat {
+    0% { opacity: 1; } 
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}

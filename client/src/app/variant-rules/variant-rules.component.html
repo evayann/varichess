@@ -1,0 +1,99 @@
+<div class="variant">
+    <h1> {{ variant }} </h1>
+
+    <h2> To win : </h2>
+    <div *ngFor="let win of rules?.toWin; let i = index" 
+        [ngSwitch]="win.type"
+        class="content" 
+        [ngStyle]="{'flex-direction': i % 2 ? 'row' : 'row-reverse'}">
+
+        <ng-container *ngSwitchCase="'CheckMate'">
+            <p> You can check mate the opposent king ! </p>
+            <div>
+                <img class="checkmate" [src]="'../../assets/piece/' + toPiece(win.piece) + '.svg'" [alt]="win.piece + ' checkmate by a pawn'" width="100%">    
+                <div class="piece-who-checkmate" style="height: 100%;"> 
+                    <img [src]="'../../assets/piece/' + toPiece('pawn') + '.svg'" [alt]="'Pawn who checkmate ' + win.piece" width="100%" />                
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'Explode'">
+            <p> {{ i != 0 ? "Or also, " : "" }} Explose the king with an amazing explosion ! </p>
+            <div>
+                <div class="explode"> </div>
+                <div class="explode"> </div>
+                <div class="explode"> </div>
+                <img [src]="'../../assets/piece/' + toPiece(win.piece) + '.svg'" [alt]="win.piece + ' who explose'" width="100%" />    
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'XCheck'">
+            <p> {{ i != 0 ? "Or also, " : "" }} Check the king {{ win.repeat }} times ! </p>
+            <div>
+                <img class="check-king" [src]="'../../assets/piece/' + toPiece(win.piece) + '.svg'" [alt]="win.piece + ' who be check ' + win.repeat + 'times'" width="100%" />    
+                <div class="xcheck" style="height: 100%;"> </div>
+            </div> 
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'RaceTop'">
+            <p> {{ i != 0 ? "Or also, " : "" }} Move {{ win.piece }} to the top of the board ! </p>
+            <div>
+                <div class="top-line"></div>
+                <div class="king-to-top" style="height: 100%;">
+                    <img [src]="'../../assets/piece/' + toPiece('king') + '.svg'" width="25%"/>
+                </div>
+                <img class="block" src="../../assets/Board4.svg" width="100%" />
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'KingHill'">
+            <p> {{ i != 0 ? "Or also, " : "" }} Move {{ win.piece }} to center square of board ! </p>
+            <div>
+                <div class="center-square"></div>
+                <div class="king-of-the-hill" style="height: 100%;">
+                    <img [src]="'../../assets/piece/' + toPiece('king') + '.svg'" width="25%"/>
+                </div>
+                <img class="block" src="../../assets/Board4.svg" width="100%" />
+            </div>
+        </ng-container>
+    </div>
+
+    <h2> When piece died </h2>
+    <div 
+        [ngSwitch]="rules?.onPieceDied"
+        class="content" >
+        <ng-container *ngSwitchCase="'ExploseRowColumn'">
+            <p> When a piece eat another and no king on line, explose all pieces ! </p>
+            <div>
+                <div class="explose-row-column" style="height: 100%;">
+                    <img id="king" [src]="'../../assets/piece/' + toPiece('king') + '.svg'" width="25%"/>
+                    <img id="pawn1" [src]="'../../assets/piece/' + toPiece('pawn') + '.svg'" width="25%"/>
+                    <img id="pawn2" [src]="'../../assets/piece/' + toPiece('pawn') + '.svg'" width="25%"/>
+                    <img id="bishop" [src]="'../../assets/piece/' + toPiece('bishop') + '.svg'" width="25%"/>
+                </div>
+                <img src="../../assets/Board4.svg" width="100%" />
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'ExploseArround'">
+            <p> When a piece eat another, explose all pieces except pawn! </p>
+            <div>
+                <div class="explose-arround" style="height: 100%;">
+                    <img id="king1" [src]="'../../assets/piece/' + toPiece('king') + '.svg'" width="20%"/>
+                    <img id="king2" [src]="'../../assets/piece/' + toPiece('king') + '.svg'" width="20%"/>
+                    <img id="pawn1" [src]="'../../assets/piece/' + toPiece('pawn') + '.svg'" width="20%"/>
+                    <img id="pawn2" [src]="'../../assets/piece/' + toPiece('pawn') + '.svg'" width="20%"/>
+                    <img id="bishop" [src]="'../../assets/piece/' + toPiece('bishop') + '.svg'" width="20%"/>
+                </div>
+                <img src="../../assets/Board5.svg" width="100%" />    
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault="">
+            <p> Nothing append when a piece die ! </p>
+        </ng-container>
+    </div>
+
+    <h2> Pieces </h2>
+    <app-rules-piece [pieces]="rules.pieces"> </app-rules-piece>
+</div>
