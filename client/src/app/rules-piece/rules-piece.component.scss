@@ -1,6 +1,9 @@
+@import "../../styles/utilities";
+
 .rules-panel {
+    @include box-shadow;
     border-radius: 10% 10% 10% 10% / 6% 6% 6% 6% ;
-    background-color: red;
+    background-color: var(--second-color);
     margin: 2% 0;
 
     div {
