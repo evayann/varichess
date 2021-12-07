@@ -1,9 +1,9 @@
-<button class="position menuButton" mat-fab color="primary" aria-label="Open Menu" (click)="sidenav.toggle()" *ngIf="!sidenav.opened"> 
+<button class="position menuButton btn-main" mat-fab aria-label="Open Menu" (click)="sidenav.toggle()" *ngIf="!sidenav.opened"> 
     <mat-icon> menu </mat-icon>
 </button>
 
-<button class="position logoButton" mat-fab color="primary" aria-label="Return to main menu"> </button>
+<button class="position logoButton btn-main" mat-fab aria-label="Return to main menu"> </button>
 
-<button class="position userButton" mat-fab color="primary" aria-label="Go to User Profile or Connect User"> 
+<button class="position userButton btn-main" mat-fab aria-label="Go to User Profile or Connect User"> 
     <div #user> </div>
 </button>

@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -16,6 +16,15 @@ import { VariantRulesComponent } from './variant-rules/variant-rules.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { GameComponent } from './game/game.component';
 import { RulesPieceComponent } from './rules-piece/rules-piece.component';
+
+/* #region  Service */
+import { UiThemesService } from './ui-themes.service';
+import { LocalStorageService } from './local-storage.service';
+/* #endregion Service */
+
+export function themeFactory(themeService: UiThemesService) {
+  return () => themeService.setThemeOnStart();
+}
 
 @NgModule({
   declarations: [
@@ -39,6 +48,11 @@ import { RulesPieceComponent } from './rules-piece/rules-piece.component';
     ReactiveFormsModule,
     
     AppRoutingModule
+  ],
+  providers: [
+    UiThemesService,
+    LocalStorageService,
+    { provide: APP_INITIALIZER, useFactory: themeFactory, deps: [UiThemesService], multi: true },
   ],
   exports: [ ],
   bootstrap: [AppComponent]

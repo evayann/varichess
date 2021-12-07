@@ -3,10 +3,11 @@ import { BoardComponent } from "./board/board.component";
 
 import { createAvatar } from '@dicebear/avatars';
 import * as style from '@dicebear/big-smile';
-import { Piece, RULES } from "model/variantType";
+import { Piece, Rules } from "model/variantType";
 import { Chess } from "model/variantChess";
 import { getRulesList, RulesList } from "model/chessRules";
 import { MatSidenav } from "@angular/material/sidenav";
+import { UiThemesService } from "./ui-themes.service";
 
 @Component({
   selector: "app-root",
@@ -21,15 +22,18 @@ export class AppComponent {
 
   variant: string = "";
   chess: Chess | undefined;
-  rules:readonly string[] = RULES;
   user!: string;
 
   private play: boolean = false;
   
-  constructor() {
+  constructor(private uiStyleToggleService: UiThemesService) {
     this.user = createAvatar(style, {
       seed: randomSeed(25)
     });
+  }
+
+  toggleTheme(): void {
+    this.uiStyleToggleService.toggle();
   }
   
   setPlay(state: boolean) {
@@ -65,6 +69,13 @@ export class AppComponent {
 
   getRulesList(): RulesList {
     return getRulesList(this.variant);
+  }
+
+  getImplementedRules(): Rules[] {
+    return [
+      "zoo", "explode", "chess", "antichess", 
+      "kingofthehill", "3check", "atomic", "horde", "racingkings"
+    ];
   }
 }
 

@@ -1,18 +1,23 @@
 <mat-sidenav-container id="container">
-  <mat-sidenav #sidenav [mode]="true ? 'over' : 'side'">
+  <mat-sidenav #sidenav [mode]="true ? 'over' : 'side'" class="exclude">
     <div class="nav">
-      <h2> Variantes </h2>
+      <div class="variant">
+        <h2> Variantes </h2>
+        <button *ngFor="let r of getImplementedRules()" class="btn-second" mat-raised-button [routerLink]="['/variant', r]" (click)="selectVariant(r)"> {{ r }} </button>
+      </div>
 
-      <a *ngFor="let r of rules" class="variant" mat-raised-button color="primary" [routerLink]="['/variant', r]" (click)="selectVariant(r)"> {{ r }} </a>
+      <div>
+        <h2> Options </h2>
+        <button class="btn-second" mat-raised-button (click)="toggleTheme()"> Themes </button>
+      </div>
 
-      <div id="space"></div>
-      
-      <button mat-fab color="primary" aria-label="Close Menu" (click)="sidenav.toggle()"> 
+      <button mat-fab class="btn-main" aria-label="Close Menu" (click)="sidenav.toggle()"> 
         <mat-icon> close </mat-icon>
       </button>
     </div>
   </mat-sidenav>
-  <mat-sidenav-content>
+
+  <mat-sidenav-content class="sidenav-content">
     <div *ngIf="variant !== ''; else chooseVariant" style="height: 100%;">
       <ng-container *ngIf="isPlaying(); else informations">
         <app-game [variant]="variant"> </app-game>
