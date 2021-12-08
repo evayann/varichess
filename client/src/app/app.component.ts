@@ -1,4 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
+import { MatSidenav } from "@angular/material/sidenav";
 import { BoardComponent } from "./board/board.component";
 
 import { createAvatar } from '@dicebear/avatars';
@@ -6,8 +7,8 @@ import * as style from '@dicebear/big-smile';
 import { Piece, Rules } from "model/variantType";
 import { Chess } from "model/variantChess";
 import { getRulesList, RulesList } from "model/chessRules";
-import { MatSidenav } from "@angular/material/sidenav";
 import { UiThemesService } from "./ui-themes.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -26,7 +27,10 @@ export class AppComponent {
 
   private play: boolean = false;
   
-  constructor(private uiStyleToggleService: UiThemesService) {
+  constructor(
+    private uiStyleToggleService: UiThemesService, 
+    private router: Router
+    ) {
     this.user = createAvatar(style, {
       seed: randomSeed(25)
     });
@@ -44,9 +48,7 @@ export class AppComponent {
     return this.play;
   }
   
-  selectVariant(type: string) {
-    this.play = false; // Reset previous game
-    this.variant = type;
+  closeNav() {
     this.sidenav.toggle();
   }
 

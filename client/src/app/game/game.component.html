@@ -1,7 +1,7 @@
-<div class="game">
+<div class="game" #game>
     <div class="board">
       <h1> {{ variant }} </h1>
-      <app-board #board (eventChess)="setChess($event)" [variant]="variant"> </app-board>
+      <app-board #board (eventChess)="setChess($event)" [variant]="variant" [threeD]="threeD"> </app-board>
       <p> Player {{ chess?.turn }}, you can play ! </p>
     </div>
     <div class="rules">
@@ -9,3 +9,11 @@
       <app-rules-piece [pieces]="getPiecesList()"> </app-rules-piece>
     </div>
 </div>
+
+<!-- Background water effect -->
+  <div class="water">
+    <svg width="100%" height="100%"
+      xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+        <path *ngFor="let wave of waves" [attr.id]="'wave' + wave" ></path>
+      </svg>
+  </div>  

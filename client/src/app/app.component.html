@@ -3,7 +3,7 @@
     <div class="nav">
       <div class="variant">
         <h2> Variantes </h2>
-        <button *ngFor="let r of getImplementedRules()" class="btn-second" mat-raised-button [routerLink]="['/variant', r]" (click)="selectVariant(r)"> {{ r }} </button>
+        <button *ngFor="let r of getImplementedRules()" class="btn-second" mat-raised-button [routerLink]="['/variant', r]" (click)="closeNav()" > {{ r }} </button>
       </div>
 
       <div>
@@ -18,25 +18,9 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="sidenav-content">
-    <div *ngIf="variant !== ''; else chooseVariant" style="height: 100%;">
-      <ng-container *ngIf="isPlaying(); else informations">
-        <app-game [variant]="variant"> </app-game>
-      </ng-container>
-
-      <ng-template #informations>
-        <div style="display: flex; flex-direction: column; align-items: center; width: 100%; padding: 20px 0;">
-          <app-variant-rules [variant]="variant" [rules]="getRulesList()"> </app-variant-rules>
-          <button mat-raised-button style="width: 10%; margin-top: 10px;" (click)="setPlay(true)"> Play </button>
-        </div>
-      </ng-template>
-    </div>
-
-    <ng-template #chooseVariant>
-      <p style="text-align: center;"> To play, please select a variant in menu </p>
-    </ng-template>
 
     <app-overlay [sidenav]="sidenav" [user]="user"></app-overlay>
 
-    <!-- <router-outlet></router-outlet> -->
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

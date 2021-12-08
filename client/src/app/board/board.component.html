@@ -1,7 +1,7 @@
-<div class="board">
+<div class="board" [ngClass]="is3D() ? 'perspective' : ''">
     <div #board 
         (mousedown)="clickOnBoard()"
-        [ngClass]="chess.isEnd() ? 'board-over' : ''" 
+        [ngClass]="[chess.isEnd() ? 'board-over' : '', is3D() ? 'board3d' : '']" 
         [ngStyle]="{
             'aspect-ratio': 1,
             'position': 'relative',

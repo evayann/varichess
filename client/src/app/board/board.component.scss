@@ -1,3 +1,5 @@
+@import "../../styles/utilities";
+
 .board {
     display: flex;
     flex-direction: column;
@@ -5,8 +7,17 @@
     justify-content: center;
 }
 
+.perspective {
+    perspective: 1000px;
+}
+
 .board > div {
     width: 75%;
+    @include box-shadow;
+}
+
+.board3d {
+    transform: rotateX(60deg);
 }
 
 .board-over::after {

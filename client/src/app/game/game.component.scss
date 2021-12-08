@@ -54,3 +54,27 @@ app-board {
         width: 80%;
     }
 }
+
+// Background 
+.water {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: -2;
+}
+
+:host {
+    --wave-1: #0f2159;
+    --wave-2: #122f7e;
+    --wave-3: #163ea5;
+    --wave-4: #1b4dcd;
+    --wave-5: #225cf7;
+}
+
+@for $i from 1 to 6 {
+    .water > svg > #wave#{$i} {
+        fill: var(--wave-#{$i});
+    }    
+}

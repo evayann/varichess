@@ -35,6 +35,7 @@ export class BoardComponent implements OnChanges, AfterViewInit {
   @Input() animation: boolean;
   @Input() variant: string;
   @Input() nbCell: 8 | 7 | 5 = 8;
+  @Input() threeD: boolean;
 
   chess: Chess;
   @Output() eventChess: EventEmitter<VariantChess> = new EventEmitter<VariantChess>();
@@ -55,6 +56,7 @@ export class BoardComponent implements OnChanges, AfterViewInit {
       this.variant = "chess";
       this.animation = true;
       this.interact = true;
+      this.threeD = false;
       this.eventChess.emit(this.chess as VariantChess);
   }
 
@@ -121,7 +123,7 @@ export class BoardComponent implements OnChanges, AfterViewInit {
 
   updateUIFromModel() {
     const currPieces: Array<PieceComponent> = this.piecesComponent;
-    const currBoard: Array<[number, Piece]> = [... this.chess.board];
+    const currBoard: Array<[number, Piece]> = [...this.chess.board];
     const newPieces: Array<[number, Piece]> = [];
     const deadPieces: Array<PieceComponent> = [];
     
@@ -247,6 +249,7 @@ export class BoardComponent implements OnChanges, AfterViewInit {
     instance.color = piece.color;
     instance.move(...parseSquare(pos));
     instance.interaction = this.interact;
+    instance.threeD = this.is3D();
     instance.board = this;
     this.piecesComponent.push(instance);
   }
@@ -316,6 +319,10 @@ export class BoardComponent implements OnChanges, AfterViewInit {
     this.applyMove(piece, x, y);
   }
   //#endregion Movements
+
+  is3D() {
+    return this.threeD;
+  }
 
   private clearPreviousInfo() {
     this.infoContent.clear();

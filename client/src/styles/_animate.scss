@@ -1,5 +1,5 @@
 .animate-theme-transition, 
 .animate-theme-transition *:not(.exclude) {
-  transition: all 1.15s linear, transform 1.15s cubic-bezier(.85,-0.01,.27,1.55);
-  -webkit-transition: all 1.15s linear, transform 1.15s cubic-bezier(.85,-0.01,.27,1.55);
+  transition: color 1.15s linear, background-color 1.15s;
+  -webkit-transition: color 1.15s linear, background-color 1.15s;
 }

@@ -18,6 +18,8 @@ export class PieceComponent {
 
   @HostBinding("style.--nb-cell") get pieceSize() { return this.board.nbCell; }
 
+  threeD!: boolean;
+  
   x!: number;
   y!: number;
   dx!: number;
