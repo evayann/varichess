@@ -20,6 +20,8 @@ import { RulesPieceComponent } from './rules-piece/rules-piece.component';
 /* #region  Service */
 import { UiThemesService } from './ui-themes.service';
 import { LocalStorageService } from './local-storage.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 /* #endregion Service */
 
 export function themeFactory(themeService: UiThemesService) {
@@ -47,7 +49,13 @@ export function themeFactory(themeService: UiThemesService) {
     FormsModule,
     ReactiveFormsModule,
     
-    AppRoutingModule
+    AppRoutingModule,
+         ServiceWorkerModule.register('ngsw-worker.js', {
+           enabled: environment.production,
+           // Register the ServiceWorker as soon as the app is stable
+           // or after 30 seconds (whichever comes first).
+           registrationStrategy: 'registerWhenStable:30000'
+         })
   ],
   providers: [
     UiThemesService,

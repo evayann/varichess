@@ -1,6 +1,6 @@
 <div class="game" #game>
     <div class="board">
-      <h1> {{ variant }} </h1>
+      <h1> {{ toTitle(variant) }} </h1>
       <app-board #board (eventChess)="setChess($event)" [variant]="variant" [threeD]="threeD"> </app-board>
       <p> Player <b>{{ chess?.turn }}</b>, you can play ! </p>
     </div>

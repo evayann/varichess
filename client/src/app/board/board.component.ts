@@ -277,7 +277,7 @@ export class BoardComponent implements OnChanges, AfterViewInit {
     
     piece.move(x, y);
 
-    if (piece.role === "pawn" && (y === 0 || y === this.nbCell)) {
+    if (piece.role === "pawn" && (y === 0 || y === this.nbCell - 1)) {
       move.promotion = "queen";
       piece.updateRole("queen");
     }

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toTitle } from 'app/utilites';
 import { getRulesList, RulesList } from "model/chessRules";
@@ -30,9 +30,8 @@ export class GameComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      const variant = params["variant"];
-      this.rules = getRulesList(variant);
-      this.variant = toTitle(variant);
+      this.variant = params["variant"];
+      this.rules = getRulesList(this.variant);
       this.threeD = params["3d"] === "true";
     });
   }
@@ -136,5 +135,9 @@ export class GameComponent implements OnInit, AfterViewInit {
     }
 
     window.requestAnimationFrame(this.updateWaves.bind(this));
+  }
+
+  toTitle(str: string): string {
+    return toTitle(str);
   }
 }
