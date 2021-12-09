@@ -1,44 +1,30 @@
 // #region Background
-$second-color-light: #7168ee;
-$second-color-dark : #4135e6; 
+$second-color-light: #7eadf8;
+$second-color-dark : #2f6dd1; 
 
 $second-color-lighten: lighten($second-color-light, 10%);
 $second-color-darken : darken($second-color-dark, 10%); 
 
-$main-color-light: #7eadf8;
-$main-color-dark : #3579e6;
+$main-color-light: #225cf7;
+$main-color-dark : #163ea5;
 
 $main-color-lighten: lighten($main-color-light, 10%);
 $main-color-darken : darken($main-color-dark, 10%); 
 
-$background-light : #47679b;
-$background-dark  : #1f4b91;
+$background-light : #719add;
+$background-dark  : #173e7c;
 // #endregion Background
 
 // #region Text
 $text-light        : black;
 $text-dark         : white;
-$text-main-light : #555;
-$text-main-dark  : #bbb;
 // #endregion Text
-
-// #region Shadow
-$shadow-light : rgba(0, 0, 0, .35);
-$shadow-dark  : rgba(255, 255, 255, .5);
-// #endregion Shadow
-
 
 $colors : (
     --background-color: ($background-light, $background-dark),
-    --background-opposite-color: ($background-dark, $background-light),
 
     --text-color: ($text-light, $text-dark),
-    --text-color-main: ($text-main-light, $text-main-dark),
-
-    --shadow: ($shadow-light, $shadow-dark),
 
     --second-color: ($second-color-light, $second-color-dark),
-    --second-color-alt: ($second-color-darken, $second-color-lighten),
     --main-color: ($main-color-light, $main-color-dark),
-    --main-color-alt: ($main-color-darken, $main-color-lighten)
 )

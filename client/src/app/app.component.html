@@ -3,12 +3,12 @@
     <div class="nav">
       <div class="variant">
         <h2> Variantes </h2>
-        <button *ngFor="let r of getImplementedRules()" class="btn-second" mat-raised-button [routerLink]="['/variant', r]" (click)="closeNav()" > {{ r }} </button>
+        <button *ngFor="let r of getImplementedRules()" class="btn-main" mat-raised-button [routerLink]="['/variant', toVariant(r)]" (click)="closeNav()" > {{ r }} </button>
       </div>
 
       <div>
         <h2> Options </h2>
-        <button class="btn-second" mat-raised-button (click)="toggleTheme()"> Themes </button>
+        <button class="btn-main" mat-raised-button (click)="toggleTheme()"> Change Theme </button>
       </div>
 
       <button mat-fab class="btn-main" aria-label="Close Menu" (click)="sidenav.toggle()"> 

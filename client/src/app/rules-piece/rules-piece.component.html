@@ -6,7 +6,7 @@
 
         <div>
             <img [src]="'../../assets/piece/' + getCurrentPieceAcronyme() + '.svg'" width="50%"/>
-            <p> {{ currentPiece }} </p>    
+            <p> {{ toTitle(currentPiece) }} </p>    
         </div>
         
         <button mat-fab class="btn-main" aria-label="Go to next piece description" (click)="nextPiece()"> 

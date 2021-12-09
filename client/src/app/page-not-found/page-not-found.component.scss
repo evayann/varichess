@@ -18,6 +18,15 @@ h1, p {
     text-align: center;
 }
 
+b {
+    color: var(--text-color-alt);
+}
+
+p > span {
+    font-size: 2em;
+}
+
 span {
-    color: crimson;
+    color: var(--text-color-alt);
+    font-weight: 200;
 }

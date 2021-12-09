@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { toTitle } from 'app/utilites';
 import { getRulesList, RulesList } from "model/chessRules";
 import { Chess } from 'model/variantChess';
 import { Role } from 'model/variantType';
@@ -15,11 +16,13 @@ export class GameComponent implements OnInit, AfterViewInit {
   @Input() threeD: boolean = false;
   @Input() variant: string = "chess";
   chess: Chess | undefined;
+  private rules: RulesList | undefined;
 
   waves: number[] = [1, 2, 3, 4, 5];
   
   maxPieces: string = "00000000000000000000000000000000";
   nbPieces: number = 32;
+  private currentY: number = 0;
   private lastUpdate: number | undefined;
   private totalTime: number = 0;
 
@@ -27,7 +30,9 @@ export class GameComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.variant = params["variant"];
+      const variant = params["variant"];
+      this.rules = getRulesList(variant);
+      this.variant = toTitle(variant);
       this.threeD = params["3d"] === "true";
     });
   }
@@ -37,11 +42,11 @@ export class GameComponent implements OnInit, AfterViewInit {
   }
 
   getPiecesList(): Role[] {
-    return getRulesList(this.variant).pieces;
+    return this.rules?.pieces || [] as Role[];
   }
 
   getRulesList(): RulesList {
-    return getRulesList(this.variant);
+    return this.rules || {} as RulesList;
   }
 
   setChess(chess: Chess) {
@@ -49,22 +54,29 @@ export class GameComponent implements OnInit, AfterViewInit {
   }
    
   getY() {
-    this.nbPieces = !this.chess ? 32 : [... this.chess?.board].length;
-    return .05 + (this.nbPieces / 32) * .7;
+    const nbPieces: number = this.rules?.nbTotalPieces || 32;
+    this.nbPieces = !this.chess ? nbPieces : [... this.chess?.board].length;
+    return .05 + (this.nbPieces / nbPieces) * .7;
   }
 
   calculateWavePoints(factor: number,
       waveRatio: number,
-      speed: number = 1, waveDelta: number = 20, wavePoints: number = 10) {
+      speed: number = 1, waveDelta: number = 20, 
+      wavePoints: number = 10, waveScaleSpeed: number = 100) {
     let points: Array<{x: number, y: number}> = [];
     const el = this.game.nativeElement;
     const waveWidth: number = el.clientWidth;
+
+    if (this.currentY !== this.getY()) {
+      const jump: number = Math.abs(this.getY() - this.currentY) / waveScaleSpeed;
+      this.currentY = this.currentY > this.getY() + .001 ? this.currentY - jump : this.getY(); 
+    }
 
     for (var i = 0; i <= wavePoints; i++) {
       const x = i / wavePoints * waveWidth;
       const sinSeed = (factor + (i + i % wavePoints)) * speed * 100;
       const sinHeight = Math.sin(sinSeed / 100) * waveDelta;
-      const waveHeight: number = (this.getY() + (waveRatio / 6)) * el.clientHeight;
+      const waveHeight: number = (this.currentY + (waveRatio / 6)) * el.clientHeight;
       const yPos = Math.sin(sinSeed / 100) * sinHeight + waveHeight;
       points.push({x: x, y: yPos});
     }

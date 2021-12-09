@@ -7,8 +7,8 @@
     <ul>
         <li> {{ "King " + (rules?.canBeCheck ? "can" : "can't") + " be check" }} </li>
         <li *ngIf="rules?.onPieceDied" [ngSwitch]="rules?.onPieceDied"> 
-            <p *ngSwitchCase="'ExploseArround'"> Explose all piece in a radius of 1 when a piece is eat except pawn. </p>
-            <p *ngSwitchCase="'ExploseRowColumn'"> Explose all piece on row and column when a piece is eat except a king is on row or column.</p>
+            <span *ngSwitchCase="'ExploseArround'"> Explose all piece in a radius of 1 when a piece is eat except pawn. </span>
+            <span *ngSwitchCase="'ExploseRowColumn'"> Explose all piece on row and column when a piece is eat except a king is on row or column.</span>
         </li>
     </ul>
 </div>

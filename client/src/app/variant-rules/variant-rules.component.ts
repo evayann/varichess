@@ -3,7 +3,7 @@ import { Role } from 'model/variantType';
 import { getRulesList, RulesList } from 'model/chessRules';
 import { getPieceAcronyme } from 'model/util';
 import { ActivatedRoute } from '@angular/router';
-
+import { toTitle } from 'app/utilites';
 @Component({
   selector: 'app-variant-rules',
   templateUrl: './variant-rules.component.html',
@@ -23,8 +23,12 @@ export class VariantRulesComponent implements OnInit {
     })
   }
 
-  toPiece(piece: Role | "All") {
-    return piece === "All" ? "allw": getPieceAcronyme({role: piece, color: "white"});
+  toPiece(piece: Role | "all", color: "white" | "black" = "white") {
+    return piece === "all" ? "all" + color[0]: getPieceAcronyme({role: piece, color: color});
+  }
+
+  toTitle(str: string): string {
+    return toTitle(str);
   }
 
 }

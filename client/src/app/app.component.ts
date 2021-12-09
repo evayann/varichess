@@ -4,11 +4,11 @@ import { BoardComponent } from "./board/board.component";
 
 import { createAvatar } from '@dicebear/avatars';
 import * as style from '@dicebear/big-smile';
-import { Piece, Rules } from "model/variantType";
+import { Piece } from "model/variantType";
 import { Chess } from "model/variantChess";
 import { getRulesList, RulesList } from "model/chessRules";
 import { UiThemesService } from "./ui-themes.service";
-import { Router } from "@angular/router";
+import { formatTitle } from "./utilites";
 
 @Component({
   selector: "app-root",
@@ -27,10 +27,7 @@ export class AppComponent {
 
   private play: boolean = false;
   
-  constructor(
-    private uiStyleToggleService: UiThemesService, 
-    private router: Router
-    ) {
+  constructor( private uiStyleToggleService: UiThemesService ) {
     this.user = createAvatar(style, {
       seed: randomSeed(25)
     });
@@ -73,11 +70,15 @@ export class AppComponent {
     return getRulesList(this.variant);
   }
 
-  getImplementedRules(): Rules[] {
+  getImplementedRules(): string[] {
     return [
-      "zoo", "explode", "chess", "antichess", 
-      "kingofthehill", "3check", "atomic", "horde", "racingkings"
+      "Zoo", "Explode", "Chess", "Anti Chess", 
+      "King of the hill", "3 Check", "Atomic", "Horde", "Racing Kings"
     ];
+  }
+
+  toVariant(rules: string): string {
+    return formatTitle(rules);
   }
 }
 

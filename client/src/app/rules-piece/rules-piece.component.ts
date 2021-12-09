@@ -4,6 +4,7 @@ import { getPieceAcronyme } from 'model/util';
 import { Board } from 'model/variantBoard';
 import { Chess } from 'model/variantChess';
 import { Piece, Role } from 'model/variantType';
+import { toTitle } from 'app/utilites';
 
 @Component({
   selector: 'app-rules-piece',
@@ -60,5 +61,9 @@ export class RulesPieceComponent {
 
   getCurrentPieceAcronyme(): string {
     return this.currentPiece ? getPieceAcronyme({role: this.currentPiece, color: "white"}) : "pw";
+  }
+
+  toTitle(str: string | undefined): string {
+    return toTitle(str || "");
   }
 }
